@@ -1,0 +1,59 @@
+.leaflet-control-legende-div {
+	background: #eeeeee;
+  border-style: solid;
+  border-width: 3px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	padding: 5px;
+}
+
+.leaflet-control-legende a {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 7px 7px 7px 7px;
+	background-image: url(icons/legende.png);
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	width: 28px;
+	height: 28px;
+}
+
+.leaflet-control-geocoder a {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+}
+
+.leaflet-control-geocoder {
+	box-shadow: 0 1px 7px #999;
+	background: #f8f8f9;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+}
+
+.leaflet-control-geocoder a {
+	background-image: url(images/geocoder.png);
+	width: 36px;
+	height: 36px;
+}
+
+.leaflet-touch .leaflet-control-geocoder a {
+	width: 44px;
+	height: 44px;
+}
+
+.leaflet-control-geocoder .leaflet-control-geocoder-form,
+.leaflet-control-geocoder-expanded .leaflet-control-geocoder-toggle {
+	display: none;
+}
+
+.leaflet-control-geocoder-expanded .leaflet-control-geocoder-form {
+	display: block;
+	position: relative;
+}
+
+.leaflet-control-geocoder-expanded .leaflet-control-geocoder-form {
+	padding: 5px;
+}
