@@ -11,17 +11,15 @@
   <script src="map.js"></script>
   <script>
     var map, ids = {};
-    //var apiUrl = 'http://bastler.bplaced.net/api/inbaz_api.php?callback=?';
-    var apiUrl = 'http://www.jugglingedge.com/feeds/createjson.php?Data=events&UserID=404&CallBack=?';
+    var apiUrl = 'http://www.jugglingedge.com/feeds/createjson.php?CallBack=?';
 
     $(function () {
       map = initMap();
-      map.zoomIn();
+      //map.zoomIn();
       loadPoi();
       //maybe in future
-      map.on('moveend', loadPoi);
+      //map.on('moveend', loadPoi);
       //load only once for now
-      //loadPoi();
 
 		  var info = new L.Control.InbazLegende();
 
@@ -53,10 +51,6 @@
         popupAnchor: [0, 0]
       });
 
-        //var poiUrl = 'http://192.168.1.51/inbaz_tests/api.php&bbox=BBOX'.replace(/(BBOX)/g, map.getBounds());//.toOverpassBBoxString());
-        //var poiUrl = 'http://192.168.1.51/inbaz_tests/api.php?user=k4';
-        //var poiUrl = 'http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[amenity=restaurant];out;'.replace(/(BBOX)/g, map.getBounds().toOverpassBBoxString());
-
         var poiInfo = function(tags) {
           var r = $('<table>');
           for (key in tags)
@@ -64,48 +58,21 @@
           return $('<div>').append(r).html();
         }
 
-        function onEachFeature(feature, layer) {
-          var popupContent = "<p>I started out as a GeoJSON " +
-              feature.geometry.type + ", but now I'm a Leaflet vector!</p>";
-
-          if (feature.properties && feature.properties.popupContent) {
-            popupContent += feature.properties.popupContent;
+        $.getJSON(apiUrl, {Data : "events", UserID : "404" } , function(data) {
+          //convert Conventions to a POI overlay
+          for(i=0;i<data.length;i++) {
+            if (data[i].EventID in ids) return;
+            ids[data[i].EventID] = true;
+            if ((data[i].Lat == 0) && (data[i].Lng == 0)) {
+              console.log(data[i].ShortTitle + " has no position");
+              continue;
+            }
+            var pos = new L.LatLng(data[i].Lat, data[i].Lng);
+            var icon = jongIcon;
+            var popup = poiInfo(data[i]);
+            var marker = new L.Marker(pos, {icon: icon}).bindPopup(popup);
+            map.addLayer(marker);
           }
-
-          layer.bindPopup(popupContent);
-        }
-
-        $.getJSON(apiUrl, { } , function(data) {
-          //TODO check
-          for(i=0;i<data.elements.length;i++) {
-            console.log(data.elements[i].FullTitle);
-          }
-//          L.geoJson(data, {
-//
-//            onEachFeature: onEachFeature,
-//
-//            pointToLayer: function (feature, latlng) {
-//              return L.marker(latlng, {icon: jongIcon});
-//  //    				return L.circleMarker(latlng, {
-//  //    					radius: 8,
-//  //    					fillColor: "#ff7800",
-//  //    					color: "#000",
-//  //    					weight: 1,
-//  //    					opacity: 1,
-//  //    					fillOpacity: 0.8
-//  //    				});
-//            }
-//          }).addTo(map);
-//
-//  //        $.each(data.elements, function(ign, i) {
-//  //          if (i.id in ids) return;
-//  //          ids[i.id] = true;
-//  //          L.marker([i.lat, i.lon], {
-//  //            icon: jongIcon,
-//  //            title: 'Convention'
-//  //          }).addTo(map);
-//  //          //}).bindPopup(poiInfo(i.tags)).addTo(map);
-//  //        });
         });
     }
 
