@@ -9,7 +9,9 @@
 	<link rel="stylesheet" href="Control.Legende.css" />
 	<script src="Control.Legende.js"></script>
   <!--script src="edge.js"></script-->
-  <script src="customlayer.js"></script>
+  <script src="EdgeUserLayer.js"></script>
+  <script src="ajax.js"></script>
+  <script src="GeoJSON.js"></script>
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css" />
   <!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.ie.css" /><![endif]-->
   <style>
@@ -35,9 +37,7 @@
 		var info = new L.Control.InbazLegende();
 
 		map.addControl(info);
-    var latlng = new L.LatLng(50, 4);
-    //map.addLayer(new L.MyCustomLayer(latlng));
-    var edge = new L.CustomLayer({});
+    var edge = new L.EdgeUserLayer({userID:"1"});
     map.addLayer(edge);
 
     //L.EdgeLayer().addTo(map);
