@@ -29,13 +29,16 @@
 	  attr_edge = 'Con Data &copy; <a href="http://www.jugglingedge.com">JugglingEdge</a>';
     var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {opacity: 0.7, attribution: [attr_osm, attr_edge].join(', ')});
 
+    console.log("try to add");
 		var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(50, 4), 5);
 
 		var info = new L.Control.InbazLegende();
 
 		map.addControl(info);
-    var latlng = L.LatLng(50, 4);
-    map.addLayer(new MyCustomLayer(latlng));
+    var latlng = new L.LatLng(50, 4);
+    //map.addLayer(new L.MyCustomLayer(latlng));
+    var edge = new L.CustomLayer({});
+    map.addLayer(edge);
 
     //L.EdgeLayer().addTo(map);
 
