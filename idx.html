@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Convention Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <script src="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.js"></script>
+	<link rel="stylesheet" href="Control.Legende.css" />
+	<script src="Control.Legende.js"></script>
+  <script src="map.js"></script>
+  <script>
+    var map, ids = {}, icons={};
+    var apiUrl = 'http://www.jugglingedge.com/feeds/createjson.php?CallBack=?';
+
+    $(function () {
+      map = initMap();
+      //map.zoomIn();
+      loadPoi();
+      //maybe in future
+      //map.on('moveend', loadPoi);
+      //load only once for now
+
+		  var info = new L.Control.InbazLegende();
+
+		  map.addControl(info);
+    });
+
+    function handleTrivia(eventID) {
+      var poiInfo = function(tags) {
+        var r = $('<table>');
+        for (key in tags)
+          r.append($('<tr>').append($('<th>').text(key)).append($('<td>').text(tags[key])));
+        return $('<div>').append(r).html();
+      }
+
+      var content = false;
+      $.getJSON(apiUrl, {Data : "trivia", EventID : eventID } , function(data) {
+
+        console.log(data);
+        console.log(eventID);
+
+        //convert Conventions to a POI overlay
+        for (i=0;i<data.length;i++) {
+          content=true;
+
+          var trivia = data[i];
+
+          if (trivia.Stat == "conType") {
+            console.log("ev: "+eventID+"("+ids[eventID].ShortTitle+") ist eine "+trivia.Value + " Convention");
+            var pos = new L.LatLng(ids[eventID].Lat, ids[eventID].Lng);
+            var icon;
+            if (trivia.Value in icons) {
+              console.log("icon exsists ("+trivia.Value+")");
+              icon = icons[trivia.Value];
+              }else{
+              //TODO unkown icon
+              icon = juggling;
+            }
+            var popup = poiInfo(ids[eventID]);
+            var marker = new L.Marker(pos, {icon: icon}).bindPopup(popup);
+            map.addLayer(marker);
+          }
+        }
+
+      });
+      //TODO delete maybe
+      if (!content) {//add default marker
+          var pos = new L.LatLng(ids[eventID].Lat, ids[eventID].Lng);
+          var icon = icons["juggling"];
+          var popup = poiInfo(ids[eventID]);
+          var marker = new L.Marker(pos, {icon: icon}).bindPopup(popup);
+          map.addLayer(marker);
+        }
+    }
+
+    function loadPoi() {
+      if (map.getZoom() < 4) {
+        return;
+      }
+
+      var jongIcon = L.icon({
+        iconUrl: 'icons/conTag_1.png',
+        iconSize: [32, 32],
+        iconAnchor: [-32, 0],
+        popupAnchor: [0, 0]
+      });
+      icons["juggling"]=jongIcon;
+
+      var uniIcon = L.icon({
+        iconUrl: 'icons/conTag_2.png',
+        iconSize: [32, 32],
+        iconAnchor: [0, 35],
+        popupAnchor: [0, 0]
+      });
+      icons["unicycle"]=uniIcon;
+
+      var acroIcon = L.icon({
+        iconUrl: 'icons/conTag_3.png',
+        iconSize: [32, 32],
+        iconAnchor: [0, 32],
+        popupAnchor: [0, 0]
+      });
+      icons["acrobatics"]=acroIcon;
+
+
+        $.getJSON(apiUrl, {Data : "events", UserID : "404" } , function(data) {
+          //convert Conventions to a POI overlay
+          for(i=0;i<data.length;i++) {
+            var event = data[i];
+
+            if (event.EventID in ids) return;
+            ids[event.EventID] = event;
+            if ((event.Lat == 0) && (event.Lng == 0)) {
+              console.log(event.ShortTitle + " has no position");
+              continue;
+            }
+          //  var pos = new L.LatLng(event.Lat, event.Lng);
+          //  var icon = jongIcon;
+          //  var popup = poiInfo(event);
+          //  var marker = new L.Marker(pos, {icon: icon}).bindPopup(popup);
+          //  map.addLayer(marker);
+          }
+
+          console.log("get Con Types");
+          for(eventID in ids) {
+            console.log("Trivia for Event ["+eventID+"]"+ids[eventID].ShortTitle);
+            handleTrivia(eventID);
+          }
+        });
+
+    }
+
+  </script>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css" />
+  <!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.ie.css" /><![endif]-->
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    html, body, #map {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+</body>
+</html>
+
