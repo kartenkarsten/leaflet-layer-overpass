@@ -22,6 +22,7 @@ L.EdgeUserLayer = L.FeatureGroup.extend({
         popupAnchor: [0, 0]
       })
     },
+    onReady: function (data) {console.log(data);},
     latlng: new L.LatLng(50, 4)
   },
 
@@ -30,7 +31,7 @@ L.EdgeUserLayer = L.FeatureGroup.extend({
     this._layers = {};
     // save position of the layer or any options from the constructor
     console.log("init");
-    this._ids = {};
+    this._data = [{lat:90,lon:0,value:2}];//work around for to red heat map
     this._loadPoi();
   },
 
@@ -57,14 +58,22 @@ L.EdgeUserLayer = L.FeatureGroup.extend({
           if ((event.Lat == 0) && (event.Lng == 0)) {
             console.log(event.ShortTitle + " has no position");
             continue;
+          } else {
+            var pos = new L.LatLng(event.Lat, event.Lng);
+            var popup = this.instance._poiInfo(event);
+            var marker = new L.Marker(pos, {icon: icon}).bindPopup(popup);
+            this.instance.addLayer(marker);
+            this.instance._data.push({lat:event.Lat, lon:event.Lng, value:1});
           }
-          var pos = new L.LatLng(event.Lat, event.Lng);
-          var popup = this.instance._poiInfo(event);
-          var marker = new L.Marker(pos, {icon: icon}).bindPopup(popup);
-          this.instance.addLayer(marker);
         }
+        this.instance.options.onReady(this.instance._data);
       }
     });
+  },
+
+  getData: function () {
+    console.log(this._data);
+    return this._data;
   }
 
 });
