@@ -25,6 +25,7 @@ map.addLayer(opl);
 You can specify an options object as an argument of L.OverPassLayer.
 ```javascript
 options: {
+  _map: map,//important! pass the map object
   query: "http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[amenity=post_box];out;",
   callback: function(data) {
     for(i=0;i<data.elements.length;i++) {
