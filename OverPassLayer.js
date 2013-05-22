@@ -1,44 +1,30 @@
+L.LatLngBounds.prototype.toOverpassBBoxString = function (){
+  var a = this._southWest,
+      b = this._northEast;
+  return [a.lat, a.lng, b.lat, b.lng].join(",");
+}
+
 L.OverPassLayer = L.FeatureGroup.extend({
   options: {
-    apiUrl: 'http://www.jugglingedge.com/feeds/createjson.php?CallBack=?',
-    userID: "404",
-    icons:{"juggling":
-      L.icon({
-        iconUrl: 'icons/conTag_1.png',
-        iconSize: [32, 32],
-        iconAnchor: [0, 0],
-        popupAnchor: [0, 0]
-      }),
-      "unicycle": L.icon({
-        iconUrl: 'icons/conTag_2.png',
-        iconSize: [32, 32],
-        iconAnchor: [0, 32],
-        popupAnchor: [0, 0]
-      }),
-      "acrobatics": L.icon({
-        iconUrl: 'icons/conTag_3.png',
-        iconSize: [32, 32],
-        iconAnchor: [32, 32],
-        popupAnchor: [0, 0]
-      })
-    },
+    query: "http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[amenity=restaurant];out;",
     callback: function(data) {
-      var icon = this.instance.options.icons["juggling"];
-      for(i=0;i<data.length;i++) {
-        var event = data[i];
-        if ((event.Lat == 0) && (event.Lng == 0)) {
-          console.log(event.ShortTitle + " has no position");
-          continue;
-        } else {
-          var pos = new L.LatLng(event.Lat, event.Lng);
-          var popup = this.instance._poiInfo(event);
-          var marker = new L.Marker(pos, {icon: icon}).bindPopup(popup);
-          this.instance.addLayer(marker);
-          //this.instance._data.push({lat:event.Lat, lon:event.Lng, value:1});
-        }
+      for(i=0;i<data.elements.length;i++) {
+        e = data.elements[i];
+
+        if (e.id in this.instance._ids) return;
+        this.instance._ids[e.id] = true;
+        var pos = new L.LatLng(e.lat, e.lon);
+        var popup = this.instance._poiInfo(e.tags);
+        var color = e.tags.collection_times ? 'green':'red';
+        var circle = L.circle(pos, 50, {
+            color: color,
+            fillColor: '#fa3',
+            fillOpacity: 0.5
+        })
+          .bindPopup(popup)
+          .addTo(this.instance._map);
       }
-    },
-    latlng: new L.LatLng(50, 4)
+    }
   },
 
   initialize: function (options) {
@@ -46,8 +32,12 @@ L.OverPassLayer = L.FeatureGroup.extend({
     this._layers = {};
     // save position of the layer or any options from the constructor
     console.log("init");
-    this._data = [{lat:90,lon:0,value:2}];//work around for to red heat map
-    this._loadPoi();
+    this._ids = {};
+    this._map = options._map;//to set _map immediately
+    this.onMoveEnd();
+    if (this.options.query.indexOf("(BBOX)") != -1) {
+      this._map.on('moveend', this.onMoveEnd, this);
+    }
   },
 
   _poiInfo: function(tags) {
@@ -57,15 +47,15 @@ L.OverPassLayer = L.FeatureGroup.extend({
     return $('<div>').append(r).html();
   },
 
-  _loadPoi: function () {
+  onMoveEnd: function () {
     console.log("load Pois");
 
     $.ajax({
-      url: this.options.apiUrl,
+      url: this.options.query.replace(/(BBOX)/g, this._map.getBounds().toOverpassBBoxString()),
       context: { instance: this },
       crossDomain: true,
-      dataType: "jsonp",
-      data: {Data : "events", UserID : this.options.userID},
+      dataType: "json",
+      data: {},
       success: this.options.callback
     });
   },

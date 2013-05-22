@@ -28,11 +28,12 @@
 	  attr_edge = 'Con Data &copy; <a href="http://www.jugglingedge.com">JugglingEdge</a>';
     var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {opacity: 0.7, attribution: [attr_osm, attr_edge].join(', ')});
 
-		var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(50, 4), 5);
+		var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 14);
 
-    //Convention overlay
+    //OverPassAPI overlay
     var opl = new L.OverPassLayer({
-      userID:"1"
+      _map:map,
+      query: "http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[amenity=post_box];out;",
     });
     map.addLayer(opl);
 
