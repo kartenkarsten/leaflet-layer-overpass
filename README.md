@@ -7,7 +7,7 @@ A Leaflet Plugin to create a custom POI overlay - thanks to the OSM-Dataset and 
 # How to use it ?
 ```javascript
 var attr_osm = 'Map data &copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors',
-attr_overpass = 'Cons via <a href="http://www.inbaz.org/">Inbaz</a>';
+attr_overpass = 'POI via <a href="http://www.overpass-api.de/">Overpass API</a>';
 var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {opacity: 0.7, attribution: [attr_osm, attr_overpass].join(', ')});
 
 var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 14);
