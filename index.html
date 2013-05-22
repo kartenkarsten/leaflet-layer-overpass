@@ -4,81 +4,12 @@
   <title>Convention Map</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-  <script src="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.js"></script>
-	<link rel="stylesheet" href="Control.Legende.css" />
-	<script src="Control.Legende.js"></script>
-  <script src="map.js"></script>
-  <script>
-    var map, ids = {};
-    var apiUrl = 'http://www.jugglingedge.com/feeds/createjson.php?CallBack=?';
-
-    $(function () {
-      map = initMap();
-      //map.zoomIn();
-      loadPoi();
-      //maybe in future
-      //map.on('moveend', loadPoi);
-      //load only once for now
-
-		  var info = new L.Control.InbazLegende();
-
-		  map.addControl(info);
-    });
-
-
-    function loadPoi() {
-      if (map.getZoom() < 4) {
-        return;
-      }
-
-      var jongIcon = L.icon({
-        iconUrl: 'icons/conTag_1.png',
-        iconSize: [32, 32],
-        iconAnchor: [-3, -3],
-        popupAnchor: [0, 0]
-      });
-      var uniIcon = L.icon({
-        iconUrl: 'icons/oconTag_2.png',
-        iconSize: [32, 32],
-        iconAnchor: [-3, 35],
-        popupAnchor: [0, 0]
-      });
-      var acroIcon = L.icon({
-        iconUrl: 'icons/conTag_3.png',
-        iconSize: [32, 32],
-        iconAnchor: [3, 3],
-        popupAnchor: [0, 0]
-      });
-
-        var poiInfo = function(tags) {
-          var r = $('<table>');
-          for (key in tags)
-            r.append($('<tr>').append($('<th>').text(key)).append($('<td>').text(tags[key])));
-          return $('<div>').append(r).html();
-        }
-
-        $.getJSON(apiUrl, {Data : "events", UserID : "404" } , function(data) {
-          //convert Conventions to a POI overlay
-          for(i=0;i<data.length;i++) {
-            if (data[i].EventID in ids) return;
-            ids[data[i].EventID] = true;
-            if ((data[i].Lat == 0) && (data[i].Lng == 0)) {
-              console.log(data[i].ShortTitle + " has no position");
-              continue;
-            }
-            var pos = new L.LatLng(data[i].Lat, data[i].Lng);
-            var icon = jongIcon;
-            var popup = poiInfo(data[i]);
-            var marker = new L.Marker(pos, {icon: icon}).bindPopup(popup);
-            map.addLayer(marker);
-          }
-        });
-    }
-
-  </script>
-  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css" />
-  <!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.ie.css" /><![endif]-->
+  <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
+  <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet-src.js"></script>
+  <script src="EdgeUserLayer.js"></script>
+  <!--script src="ajax.js"></script-->
+  <!--script src="GeoJSON.js"></script-->
   <style>
     body {
       padding: 0;
@@ -86,11 +17,26 @@
     }
     html, body, #map {
       height: 100%;
+      width: 100%;
     }
   </style>
 </head>
 <body>
   <div id="map"></div>
+  <script>
+	  var attr_osm = 'Map data &copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors',
+	  attr_edge = 'Con Data &copy; <a href="http://www.jugglingedge.com">JugglingEdge</a>';
+    var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {opacity: 0.7, attribution: [attr_osm, attr_edge].join(', ')});
+
+		var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(50, 4), 5);
+
+    //Convention overlay
+    var edge = new L.EdgeUserLayer({
+      userID:"1"
+    });
+    map.addLayer(edge);
+
+  </script>
 </body>
 </html>
 
