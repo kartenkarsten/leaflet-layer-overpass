@@ -22,7 +22,22 @@ L.EdgeUserLayer = L.FeatureGroup.extend({
         popupAnchor: [0, 0]
       })
     },
-    onReady: function (data) {console.log(data);},
+    callback: function(data) {
+      var icon = this.instance.options.icons["juggling"];
+      for(i=0;i<data.length;i++) {
+        var event = data[i];
+        if ((event.Lat == 0) && (event.Lng == 0)) {
+          console.log(event.ShortTitle + " has no position");
+          continue;
+        } else {
+          var pos = new L.LatLng(event.Lat, event.Lng);
+          var popup = this.instance._poiInfo(event);
+          var marker = new L.Marker(pos, {icon: icon}).bindPopup(popup);
+          this.instance.addLayer(marker);
+          //this.instance._data.push({lat:event.Lat, lon:event.Lng, value:1});
+        }
+      }
+    },
     latlng: new L.LatLng(50, 4)
   },
 
@@ -44,7 +59,6 @@ L.EdgeUserLayer = L.FeatureGroup.extend({
 
   _loadPoi: function () {
     console.log("load Pois");
-    var icon = this.options.icons["juggling"];
 
     $.ajax({
       url: this.options.apiUrl,
@@ -52,22 +66,7 @@ L.EdgeUserLayer = L.FeatureGroup.extend({
       crossDomain: true,
       dataType: "jsonp",
       data: {Data : "events", UserID : this.options.userID},
-      success: function(data) {
-        for(i=0;i<data.length;i++) {
-          var event = data[i];
-          if ((event.Lat == 0) && (event.Lng == 0)) {
-            console.log(event.ShortTitle + " has no position");
-            continue;
-          } else {
-            var pos = new L.LatLng(event.Lat, event.Lng);
-            var popup = this.instance._poiInfo(event);
-            var marker = new L.Marker(pos, {icon: icon}).bindPopup(popup);
-            this.instance.addLayer(marker);
-            this.instance._data.push({lat:event.Lat, lon:event.Lng, value:1});
-          }
-        }
-        this.instance.options.onReady(this.instance._data);
-      }
+      success: this.options.callback
     });
   },
 
