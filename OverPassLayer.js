@@ -6,7 +6,7 @@ L.LatLngBounds.prototype.toOverpassBBoxString = function (){
 
 L.OverPassLayer = L.FeatureGroup.extend({
   options: {
-    query: "http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[amenity=restaurant];out;",
+    query: "http://overpass-api.de/api/interpreter?data=[out:json];(node(BBOX)[organic];node(BBOX)[second_hand];);out qt;",
     callback: function(data) {
       for(i=0;i<data.elements.length;i++) {
         e = data.elements[i];
@@ -15,10 +15,9 @@ L.OverPassLayer = L.FeatureGroup.extend({
         this.instance._ids[e.id] = true;
         var pos = new L.LatLng(e.lat, e.lon);
         var popup = this.instance._poiInfo(e.tags);
-        var color = e.tags.collection_times ? 'green':'red';
         var circle = L.circle(pos, 50, {
-            color: color,
-            fillColor: '#fa3',
+            color: 'green',
+            fillColor: '#3f0',
             fillOpacity: 0.5
         })
           .bindPopup(popup)

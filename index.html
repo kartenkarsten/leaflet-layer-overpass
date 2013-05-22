@@ -25,8 +25,8 @@
   <div id="map"></div>
   <script>
 	  var attr_osm = 'Map data &copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors',
-	  attr_edge = 'Con Data &copy; <a href="http://www.jugglingedge.com">JugglingEdge</a>';
-    var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {opacity: 0.7, attribution: [attr_osm, attr_edge].join(', ')});
+    attr_overpass = 'Cons via <a href="http://www.inbaz.org/">Inbaz</a>';
+    var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {opacity: 0.7, attribution: [attr_osm, attr_overpass].join(', ')});
 
 		var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 14);
 
@@ -34,6 +34,24 @@
     var opl = new L.OverPassLayer({
       _map:map,
       query: "http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[amenity=post_box];out;",
+      callback: function(data) {
+        for(i=0;i<data.elements.length;i++) {
+          e = data.elements[i];
+
+          if (e.id in this.instance._ids) return;
+          this.instance._ids[e.id] = true;
+          var pos = new L.LatLng(e.lat, e.lon);
+          var popup = this.instance._poiInfo(e.tags);
+          var color = e.tags.collection_times ? 'green':'red';
+          var circle = L.circle(pos, 50, {
+            color: color,
+            fillColor: '#fa3',
+            fillOpacity: 0.5
+          })
+          .bindPopup(popup)
+          .addTo(this.instance._map);
+        }
+      },
     });
     map.addLayer(opl);
 
