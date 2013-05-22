@@ -7,7 +7,7 @@
   <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
   <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet-src.js"></script>
-  <script src="EdgeUserLayer.js"></script>
+  <script src="OverPassLayer.js"></script>
   <!--script src="ajax.js"></script-->
   <!--script src="GeoJSON.js"></script-->
   <style>
@@ -31,10 +31,10 @@
 		var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(50, 4), 5);
 
     //Convention overlay
-    var edge = new L.EdgeUserLayer({
+    var opl = new L.OverPassLayer({
       userID:"1"
     });
-    map.addLayer(edge);
+    map.addLayer(opl);
 
   </script>
 </body>

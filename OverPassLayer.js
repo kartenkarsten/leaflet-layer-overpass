@@ -1,4 +1,4 @@
-L.EdgeUserLayer = L.FeatureGroup.extend({
+L.OverPassLayer = L.FeatureGroup.extend({
   options: {
     apiUrl: 'http://www.jugglingedge.com/feeds/createjson.php?CallBack=?',
     userID: "404",
@@ -78,6 +78,6 @@ L.EdgeUserLayer = L.FeatureGroup.extend({
 });
 
 //FIXME no idea why the browser crashes with this code
-//L.EdgeUserLayer = function (options) {
-//  return new L.EdgeUserLayer(options);
+//L.OverPassLayer = function (options) {
+//  return new L.OverPassLayer(options);
 //};
