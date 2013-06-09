@@ -47,3 +47,8 @@ options: {
   },
 };
 ```
+# Dependencies
+- JQuery (version 1.8.0 is working). JQuery does the AJAX requests and creats the popup content. (Might be replaceable by [Leaflet-Ajax](https://github.com/calvinmetcalf/leaflet-ajax))
+- Leaflet (tried with version 0.5.1)
+
+
