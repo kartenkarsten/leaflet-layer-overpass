@@ -57,6 +57,6 @@ options: {
 - remove JQuery dependency
 - set minimal zoom
 - control to show minimal/current zoom
-- improve popup text. use links, format addresses and contact details (compare with [OpenLinkMap](http://www.openlinkmap.org/)
+- improve popup text. use links, format addresses and contact details (compare with [OpenLinkMap](http://www.openlinkmap.org/))
 - caching do requests only on tile bboxes of a selectable zoom level - store data for some days in browser
 
