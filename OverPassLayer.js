@@ -8,6 +8,10 @@ L.OverPassLayer = L.FeatureGroup.extend({
   options: {
     query: "http://overpass-api.de/api/interpreter?data=[out:json];(node(BBOX)[organic];node(BBOX)[second_hand];);out qt;",
     callback: function(data) {
+        console.log("callback");
+        if (this.instance._map == null) {
+            console.error("_map == null");
+        }
       for(i=0;i<data.elements.length;i++) {
         e = data.elements[i];
 
@@ -20,8 +24,8 @@ L.OverPassLayer = L.FeatureGroup.extend({
             fillColor: '#3f0',
             fillOpacity: 0.5
         })
-          .bindPopup(popup)
-          .addTo(this.instance._map);
+          .bindPopup(popup);
+          this.instance.addLayer(circle);
       }
     }
   },
@@ -32,11 +36,6 @@ L.OverPassLayer = L.FeatureGroup.extend({
     // save position of the layer or any options from the constructor
     console.log("init");
     this._ids = {};
-    this._map = options._map;//to set _map immediately
-    this.onMoveEnd();
-    if (this.options.query.indexOf("(BBOX)") != -1) {
-      this._map.on('moveend', this.onMoveEnd, this);
-    }
   },
 
   _poiInfo: function(tags,id) {
@@ -58,6 +57,28 @@ L.OverPassLayer = L.FeatureGroup.extend({
       data: {},
       success: this.options.callback
     });
+  },
+
+  onAdd: function (map) {
+      this._map = map;
+
+      this.onMoveEnd();
+      if (this.options.query.indexOf("(BBOX)") != -1) {
+          map.on('moveend', this.onMoveEnd, this);
+      }
+      console.log("add layer");
+  },
+
+  onRemove: function (map) {
+      console.log("remove layer");
+      L.LayerGroup.prototype.onRemove.call(this, map);
+      this._ids = {};
+
+      map.off({
+          'moveend': this.onMoveEnd
+      }, this);
+
+      this._map = null;
   },
 
   getData: function () {

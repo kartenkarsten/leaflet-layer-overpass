@@ -26,17 +26,15 @@
       attr_overpass = 'POI via <a href="http://www.overpass-api.de/">Overpass API</a>';
     var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {opacity: 0.7, attribution: [attr_osm, attr_overpass].join(', ')});
 
-		var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 14);
+		var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 17);
 
     //OverPassAPI overlay
     var supermarkets = new L.OverPassLayer({
-      _map:map,
       query: "http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[shop=supermarket];out;",
     });
     //map.addLayer(opl);
 
     var postboxes = new L.OverPassLayer({
-      _map:map,
       query: "http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[amenity=post_box];out;",
     });
 
