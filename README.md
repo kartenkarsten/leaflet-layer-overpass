@@ -14,7 +14,6 @@ var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 1
 
 //OverPassAPI overlay
 var opl = new L.OverPassLayer({
-  _map:map,
   query: "http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[amenity=post_box];out;",
 }
 
@@ -25,7 +24,6 @@ map.addLayer(opl);
 You can specify an options object as an argument of L.OverPassLayer.
 ```javascript
 options: {
-  _map: map,//important! pass the map object
   query: "http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[amenity=post_box];out;",
   callback: function(data) {
     for(i=0;i<data.elements.length;i++) {
@@ -41,8 +39,8 @@ options: {
         fillColor: '#fa3',
         fillOpacity: 0.5
       })
-      .bindPopup(popup)
-      .addTo(this.instance._map);
+      .bindPopup(popup);
+      this.instance.addLayer(circle);
     }
   },
 };
