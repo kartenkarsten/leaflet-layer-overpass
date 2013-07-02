@@ -29,8 +29,36 @@
 		var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 17);
 
     //OverPassAPI overlay
-    var supermarkets = new L.OverPassLayer({
-      query: "http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[shop=supermarket];out;",
+    var trafficlights = new L.OverPassLayer({
+      query: 'http://overpass-api.de/api/interpreter?data=[out:json];(node["traffic_signals:vibration"](BBOX);node["traffic_signals:floor_vibration"](BBOX);node["traffic_signals:arrow"](BBOX););(._;>;);out;',
+      callback: function(data) {
+        for(i=0;i<data.elements.length;i++) {
+          e = data.elements[i];
+          if (e.id in this.instance._ids) return;
+          this.instance._ids[e.id] = true;
+
+          var pos = new L.LatLng(e.lat, e.lon);
+          var popup = this.instance._poiInfo(e.tags,e.id);
+          if(e.tags["traffic_signals:vibration"]=="yes") {
+              var myicon = L.icon({
+                  iconUrl: 'marker.png',
+                  iconSize: [16, 32],
+                  iconAnchor: [-3, -3],
+                  popupAnchor: [0, 0]
+              });
+              var marker = L.marker(pos, {icon: myicon}).bindPopup(popup);
+              this.instance.addLayer(marker);
+          }else{
+              var circle = L.circle(pos, 50, {
+                  color: 'red',
+                  fillColor: '#000',
+                  fillOpacity: 0.5
+              })
+              .bindPopup(popup);
+              this.instance.addLayer(circle);
+          }
+        }
+      },
     });
 
     var postboxes = new L.OverPassLayer({
@@ -61,9 +89,10 @@
     };
 
     var overlayMaps = {
-        "Supermarkets": supermarkets,
+        "trafficlight": trafficlights,
         "Postboxes": postboxes
     };
+    map.addLayer(postboxes);
 
     L.control.layers(baseMaps, overlayMaps).addTo(map);
   </script>
