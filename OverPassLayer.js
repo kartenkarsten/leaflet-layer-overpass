@@ -132,6 +132,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
     this._layers = {};
     // save position of the layer or any options from the constructor
     this._ids = {};
+    this._requested = {};
   },
 
   _poiInfo: function(tags,id) {
@@ -158,7 +159,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
   },
   _view2BBoxes: function(l,b,r,t) {
       //console.log(l+"\t"+b+"\t"+r+"\t"+t);
-      this.addBBox(l,b,r,t);
+      //this.addBBox(l,b,r,t);
       //console.log("calc bboxes");
       var requestZoomLevel= 14;
       //get left tile index
@@ -171,12 +172,12 @@ L.OverPassLayer = L.FeatureGroup.extend({
       var result = new Array();
       for (var x=lidx; x<=ridx; x++) {
           for (var y=tidx; y<=bidx; y++) {//in tiles tidx<=bidx
-              var left = this.tile2long(x,requestZoomLevel);
-              var right = this.tile2long(x+1,requestZoomLevel);
-              var top = this.tile2lat(y,requestZoomLevel);
-              var bottom = this.tile2lat(y+1,requestZoomLevel);
+              var left = Math.round(this.tile2long(x,requestZoomLevel)*1000000)/1000000;
+              var right = Math.round(this.tile2long(x+1,requestZoomLevel)*1000000)/1000000;
+              var top = Math.round(this.tile2lat(y,requestZoomLevel)*1000000)/1000000;
+              var bottom = Math.round(this.tile2lat(y+1,requestZoomLevel)*1000000)/1000000;
               //console.log(left+"\t"+bottom+"\t"+right+"\t"+top);
-              this.addBBox(left,bottom,right,top);
+              //this.addBBox(left,bottom,right,top);
               //console.log("http://osm.org?bbox="+left+","+bottom+","+right+","+top);
               result.push( new L.LatLngBounds(new L.LatLng(bottom, left),new L.LatLng(top, right)));
           }
@@ -205,12 +206,19 @@ L.OverPassLayer = L.FeatureGroup.extend({
                   this._map.getBounds()._northEast.lng,
                   this._map.getBounds()._northEast.lat);
 
-
-          console.log("erqest pois");
           for (var i=0; i<bboxList.length; i++) {
               var bbox = bboxList[i];
+              var x = bbox._southWest.lng;
+              var y = bbox._northEast.lat;
+              if ((x in this._requested) && (y in this._requested[x]) && (this._requested[x][y] == true)) {
+                  continue;
+              }
+              if (!(x in this._requested)) {
+                  this._requested[x] = {};
+              }
+              this._requested[x][y] = true;
+              //this.addBBox(x,bbox._southWest.lat,bbox._northEast.lng,y);
 
-              //console.log(bbox);
               $.ajax({
                   url: this.options.query.replace(/(BBOX)/g, bbox.toOverpassBBoxString()),
                   context: { instance: this },
@@ -245,6 +253,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
       console.log("remove layer");
       L.LayerGroup.prototype.onRemove.call(this, map);
       this._ids = {};
+      this._requested = {};
       this._zoomControl._removeLayer(this);
 
       map.off({
