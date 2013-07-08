@@ -53,8 +53,6 @@ options: {
 # Further Ideas
 - OverPass result to -> geoJSON to -> Leaflet Layer to support ways and areas as well (see also [PoiMap](https://github.com/simon04/POImap/blob/master/railway.html), [OverPassTurbo](https://github.com/tyrasd/overpass-ide/blob/gh-pages/js/overpass.js))
 - remove JQuery dependency
-- set minimal zoom
-- control to show minimal/current zoom
 - improve popup text. use links, format addresses and contact details (compare with [OpenLinkMap](http://www.openlinkmap.org/))
-- caching do requests only on tile bboxes of a selectable zoom level - store data for some days in browser
+- improve caching - allow to store data for some days in browser
 
