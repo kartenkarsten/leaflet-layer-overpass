@@ -45,9 +45,14 @@ options: {
   },
 };
 ```
+
+# Used by
+- [Postbox Map](http://bastler.bplaced.net/osm/postbox_map/)
+- [Sustainability Map](http://bastler.bplaced.net/osm/sustainability_map/)
+
 # Dependencies
 - JQuery (version 1.8.0 is working). JQuery does the AJAX requests and creats the popup content. (Might be replaceable by [Leaflet-Ajax](https://github.com/calvinmetcalf/leaflet-ajax))
-- Leaflet (tried with version 0.5.1)
+- Leaflet (tried with version 0.6.2)
 
 
 # Further Ideas
