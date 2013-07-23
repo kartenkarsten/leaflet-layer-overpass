@@ -4,6 +4,8 @@ Leaflet Layer OverPass
 # What is it ?
 A Leaflet Plugin to create a custom POI overlay - thanks to the OSM-Dataset and the OverPass-API
 
+checkout the [Demo](http://bastler.bplaced.net/osm/overpass_layer_demo/)
+
 # How to use it ?
 ```javascript
 var attr_osm = 'Map data &copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors',
