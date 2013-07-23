@@ -1,12 +1,12 @@
 Leaflet Layer OverPass
 =============================
 
-# What is it ?
-A Leaflet Plugin to create a custom POI overlay - thanks to the OSM-Dataset and the OverPass-API
+## What is it ?
+A Leaflet Plugin to create a custom POI overlay - thanks to the [OSM](http://www.openstreetmap.org/)-Dataset and the [OverPass-API](http://overpass-api.de/)
 
 checkout the [Demo](http://bastler.bplaced.net/osm/overpass_layer_demo/)
 
-# How to use it ?
+## How to use it ?
 ```javascript
 var attr_osm = 'Map data &copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors',
 attr_overpass = 'POI via <a href="http://www.overpass-api.de/">Overpass API</a>';
@@ -22,7 +22,7 @@ var opl = new L.OverPassLayer({
 map.addLayer(opl);
 ```
 
-# What are the options ?
+## What are the options ?
 You can specify an options object as an argument of L.OverPassLayer.
 ```javascript
 options: {
@@ -48,16 +48,16 @@ options: {
 };
 ```
 
-# Used by
+## Used by
 - [Postbox Map](http://bastler.bplaced.net/osm/postbox_map/)
 - [Sustainability Map](http://bastler.bplaced.net/osm/sustainability_map/)
 
-# Dependencies
+## Dependencies
 - JQuery (version 1.8.0 is working). JQuery does the AJAX requests and creats the popup content. (Might be replaceable by [Leaflet-Ajax](https://github.com/calvinmetcalf/leaflet-ajax))
 - Leaflet (tried with version 0.6.2)
 
 
-# Further Ideas
+## Further Ideas
 - OverPass result to -> geoJSON to -> Leaflet Layer to support ways and areas as well (see also [PoiMap](https://github.com/simon04/POImap/blob/master/railway.html), [OverPassTurbo](https://github.com/tyrasd/overpass-ide/blob/gh-pages/js/overpass.js))
 - remove JQuery dependency
 - improve popup text. use links, format addresses and contact details (compare with [OpenLinkMap](http://www.openlinkmap.org/))
