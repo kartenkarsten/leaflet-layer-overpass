@@ -2,7 +2,7 @@ Leaflet Layer OverPass
 =============================
 
 ## What is it ?
-A Leaflet Plugin to create a custom POI overlay - thanks to the [OSM](http://www.openstreetmap.org/)-Dataset and the [OverPass-API](http://overpass-api.de/)
+A [Leaflet](http://leafletjs.com/) Plugin to create a custom POI overlay - thanks to the [OSM](http://www.openstreetmap.org/)-Dataset and the [OverPass-API](http://overpass-api.de/)
 
 checkout the [Demo](http://bastler.bplaced.net/osm/overpass_layer_demo/)
 
@@ -21,6 +21,7 @@ var opl = new L.OverPassLayer({
 
 map.addLayer(opl);
 ```
+In order to get an valid query the [Overpass-turbo IDE](http://overpass-turbo.eu/) might help.
 
 ## What are the options ?
 You can specify an options object as an argument of L.OverPassLayer.
