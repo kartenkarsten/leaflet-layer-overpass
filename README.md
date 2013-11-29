@@ -50,6 +50,7 @@ options: {
 ```
 
 ## Used by
+- [Gdzie](http://gdzie.bl.ee/#!7/51.495/20.995/)
 - [Postbox Map](http://bastler.bplaced.net/osm/postbox_map/)
 - [Sustainability Map](http://bastler.bplaced.net/osm/sustainability_map/)
 
