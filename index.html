@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Leaflet-layer-overpass by kartenkarsten</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Leaflet-layer-overpass</h1>
+        <p class="header">This is an simple way to bring OSM data as POI overlay on your leaflet Map</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/kartenkarsten/leaflet-layer-overpass/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/kartenkarsten/leaflet-layer-overpass/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/kartenkarsten/leaflet-layer-overpass">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/kartenkarsten">kartenkarsten</a></p>
+
+
+      </header>
+      <section>
+        <h1>
+<a name="leaflet-layer-overpass" class="anchor" href="#leaflet-layer-overpass"><span class="octicon octicon-link"></span></a>Leaflet Layer OverPass</h1>
+
+<h2>
+<a name="what-is-it-" class="anchor" href="#what-is-it-"><span class="octicon octicon-link"></span></a>What is it ?</h2>
+
+<p>A <a href="http://leafletjs.com/">Leaflet</a> Plugin to create a custom POI overlay - thanks to the <a href="http://www.openstreetmap.org/">OSM</a>-Dataset and the <a href="http://overpass-api.de/">OverPass-API</a></p>
+
+<p>checkout the <a href="http://bastler.bplaced.net/osm/overpass_layer_demo/">Demo</a></p>
+
+<h2>
+<a name="how-to-use-it-" class="anchor" href="#how-to-use-it-"><span class="octicon octicon-link"></span></a>How to use it ?</h2>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">attr_osm</span> <span class="o">=</span> <span class="s1">'Map data &amp;copy; &lt;a href="http://openstreetmap.org/"&gt;OpenStreetMap&lt;/a&gt; contributors'</span><span class="p">,</span>
+<span class="nx">attr_overpass</span> <span class="o">=</span> <span class="s1">'POI via &lt;a href="http://www.overpass-api.de/"&gt;Overpass API&lt;/a&gt;'</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">osm</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">L</span><span class="p">.</span><span class="nx">TileLayer</span><span class="p">(</span><span class="s1">'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'</span><span class="p">,</span> <span class="p">{</span><span class="nx">opacity</span><span class="o">:</span> <span class="mf">0.7</span><span class="p">,</span> <span class="nx">attribution</span><span class="o">:</span> <span class="p">[</span><span class="nx">attr_osm</span><span class="p">,</span> <span class="nx">attr_overpass</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">', '</span><span class="p">)});</span>
+
+<span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">L</span><span class="p">.</span><span class="nx">Map</span><span class="p">(</span><span class="s1">'map'</span><span class="p">).</span><span class="nx">addLayer</span><span class="p">(</span><span class="nx">osm</span><span class="p">).</span><span class="nx">setView</span><span class="p">(</span><span class="k">new</span> <span class="nx">L</span><span class="p">.</span><span class="nx">LatLng</span><span class="p">(</span><span class="mf">52.265</span><span class="p">,</span> <span class="mf">10.524</span><span class="p">),</span> <span class="mi">14</span><span class="p">);</span>
+
+<span class="c1">//OverPassAPI overlay</span>
+<span class="kd">var</span> <span class="nx">opl</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">L</span><span class="p">.</span><span class="nx">OverPassLayer</span><span class="p">({</span>
+  <span class="nx">query</span><span class="o">:</span> <span class="s2">"http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[amenity=post_box];out;"</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="nx">map</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">(</span><span class="nx">opl</span><span class="p">);</span>
+</pre></div>
+
+<p>In order to get an valid query the <a href="http://overpass-turbo.eu/">Overpass-turbo IDE</a> might help.</p>
+
+<h2>
+<a name="what-are-the-options-" class="anchor" href="#what-are-the-options-"><span class="octicon octicon-link"></span></a>What are the options ?</h2>
+
+<p>You can specify an options object as an argument of L.OverPassLayer.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
+  <span class="nx">query</span><span class="o">:</span> <span class="s2">"http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[amenity=post_box];out;"</span><span class="p">,</span>
+  <span class="nx">callback</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span><span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">data</span><span class="p">.</span><span class="nx">elements</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">e</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">elements</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">id</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">instance</span><span class="p">.</span><span class="nx">_ids</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">instance</span><span class="p">.</span><span class="nx">_ids</span><span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">pos</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">L</span><span class="p">.</span><span class="nx">LatLng</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">lat</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">lon</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">popup</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">instance</span><span class="p">.</span><span class="nx">_poiInfo</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">tags</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">color</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">tags</span><span class="p">.</span><span class="nx">collection_times</span> <span class="o">?</span> <span class="s1">'green'</span><span class="o">:</span><span class="s1">'red'</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">circle</span> <span class="o">=</span> <span class="nx">L</span><span class="p">.</span><span class="nx">circle</span><span class="p">(</span><span class="nx">pos</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">color</span><span class="o">:</span> <span class="nx">color</span><span class="p">,</span>
+        <span class="nx">fillColor</span><span class="o">:</span> <span class="s1">'#fa3'</span><span class="p">,</span>
+        <span class="nx">fillOpacity</span><span class="o">:</span> <span class="mf">0.5</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">bindPopup</span><span class="p">(</span><span class="nx">popup</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">instance</span><span class="p">.</span><span class="nx">addLayer</span><span class="p">(</span><span class="nx">circle</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+<span class="p">};</span>
+</pre></div>
+
+<h2>
+<a name="used-by" class="anchor" href="#used-by"><span class="octicon octicon-link"></span></a>Used by</h2>
+
+<ul>
+<li><a href="http://gdzie.bl.ee/#!7/51.495/20.995/">Gdzie</a></li>
+<li><a href="http://bastler.bplaced.net/osm/postbox_map/">Postbox Map</a></li>
+<li><a href="http://bastler.bplaced.net/osm/sustainability_map/">Sustainability Map</a></li>
+</ul><h2>
+<a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies</h2>
+
+<ul>
+<li>JQuery (version 1.8.0 is working). JQuery does the AJAX requests and creats the popup content. (Might be replaceable by <a href="https://github.com/calvinmetcalf/leaflet-ajax">Leaflet-Ajax</a>)</li>
+<li>Leaflet (tried with version 0.6.2)</li>
+</ul><h2>
+<a name="further-ideas" class="anchor" href="#further-ideas"><span class="octicon octicon-link"></span></a>Further Ideas</h2>
+
+<ul>
+<li>OverPass result to -&gt; geoJSON to -&gt; Leaflet Layer to support ways and areas as well (see also <a href="https://github.com/simon04/POImap/blob/master/railway.html">PoiMap</a>, <a href="https://github.com/tyrasd/overpass-ide/blob/gh-pages/js/overpass.js">OverPassTurbo</a>)</li>
+<li>remove JQuery dependency</li>
+<li>improve popup text. use links, format addresses and contact details (compare with <a href="http://www.openlinkmap.org/">OpenLinkMap</a>)</li>
+<li>improve caching - allow to store data for some days in browser</li>
+</ul>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
