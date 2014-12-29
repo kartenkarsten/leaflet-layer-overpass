@@ -50,7 +50,7 @@ L.Control.MinZoomIdenticator = L.Control.extend({
         map.zoomIndecator = this;
 
         var className = this.className;
-        container = this._container = L.DomUtil.create('div', className);
+        var container = this._container = L.DomUtil.create('div', className);
         container.style.fontSize = "2em";
         container.style.background = "#ffffff";
         container.style.backgroundColor = "rgba(255,255,255,0.7)";
@@ -109,10 +109,12 @@ L.OverPassLayer = L.FeatureGroup.extend({
         if (this.instance._map == null) {
             console.error("_map == null");
         }
-      for(i=0;i<data.elements.length;i++) {
-        e = data.elements[i];
+      for(var i = 0, length = data.elements.length; i < length; i++) {
+        var e = data.elements[i];
 
-        if (e.id in this.instance._ids) return;
+        if (e.id in this.instance._ids){
+          return;
+        }
         this.instance._ids[e.id] = true;
         var pos = new L.LatLng(e.lat, e.lon);
         var popup = this.instance._poiInfo(e.tags,e.id);
@@ -138,7 +140,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
   _poiInfo: function(tags,id) {
     var link = '<a href="http://www.openstreetmap.org/edit?editor=id&node='+id+'">Edit this entry in iD</a><br>';
     var r = $('<table>');
-    for (key in tags)
+    for (var key in tags)
       r.append($('<tr>').append($('<th>').text(key)).append($('<td>').text(tags[key])));
     return link + $('<div>').append(r).html();
   },
