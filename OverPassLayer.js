@@ -104,7 +104,8 @@ L.LatLngBounds.prototype.toOverpassBBoxString = function (){
 L.OverPassLayer = L.FeatureGroup.extend({
   options: {
     minzoom: 15,
-    query: "http://overpass-api.de/api/interpreter?data=[out:json];(node(BBOX)[organic];node(BBOX)[second_hand];);out qt;",
+    endpoint: "http://overpass-api.de/api/",
+    query: "(node(BBOX)[organic];node(BBOX)[second_hand];);out qt;",
     callback: function(data) {
         if (this.instance._map == null) {
             console.error("_map == null");
@@ -221,8 +222,12 @@ L.OverPassLayer = L.FeatureGroup.extend({
               this._requested[x][y] = true;
               //this.addBBox(x,bbox._southWest.lat,bbox._northEast.lng,y);
 
+              
+              var queryWithMapCoordinates = this.options.query.replace(/(BBOX)/g, bbox.toOverpassBBoxString());
+              var url =  this.options.endpoint + "interpreter?data=[out:json];" + queryWithMapCoordinates;
+
               $.ajax({
-                  url: this.options.query.replace(/(BBOX)/g, bbox.toOverpassBBoxString()),
+                  url: url,
                   context: { instance: this },
                   crossDomain: true,
                   dataType: "json",
