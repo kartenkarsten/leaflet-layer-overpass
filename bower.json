@@ -1,0 +1,32 @@
+{
+  "name": "leaflet-layer-overpass",
+  "version": "1.0.0",
+  "homepage": "https://github.com/kartenkarsten/leaflet-layer-overpass",
+  "authors": [
+    "Karsten Hinz <k.hinz@tu-bs.de>",
+    "Knut Hühne <knut@k-nut.eu>"
+  ],
+  "description": "simply add an overpass layer to a leafleat map",
+  "main": "OverPassLayer.js",
+  "keywords": [
+    "leaflet",
+    "overpass",
+    "openstreetmap",
+    "osm",
+    "features",
+    "layer"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "demo",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.3",
+    "leaflet": "~0.7.3"
+  }
+}
