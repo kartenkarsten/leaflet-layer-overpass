@@ -16,7 +16,7 @@ var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 1
 
 //OverPassAPI overlay
 var opl = new L.OverPassLayer({
-  query: "http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[amenity=post_box];out;",
+  query: "node(BBOX)[amenity=post_box];out;",
 }
 
 map.addLayer(opl);
@@ -27,7 +27,8 @@ In order to get an valid query the [Overpass-turbo IDE](http://overpass-turbo.eu
 You can specify an options object as an argument of L.OverPassLayer.
 ```javascript
 options: {
-  query: "http://overpass-api.de/api/interpreter?data=[out:json];node(BBOX)[amenity=post_box];out;",
+  endpoint: "http://overpass.osm.rambler.ru/cgi/",
+  query: "node(BBOX)[amenity=post_box];out;",
   callback: function(data) {
     for(i=0;i<data.elements.length;i++) {
       e = data.elements[i];
@@ -55,7 +56,7 @@ options: {
 
 ## Dependencies
 - JQuery (version 1.8.0 is working). JQuery does the AJAX requests and creats the popup content. (Might be replaceable by [Leaflet-Ajax](https://github.com/calvinmetcalf/leaflet-ajax))
-- Leaflet (tried with version 0.6.2)
+- Leaflet (tried with version 0.6.2, 0.7.3)
 
 
 ## Further Ideas
