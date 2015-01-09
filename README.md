@@ -51,6 +51,7 @@ options: {
 
 ## Used by
 - [Gdzie](http://gdzie.bl.ee/#!7/51.495/20.995/)
+- [pois.elblogdehumitos.com.ar](http://pois.elblogdehumitos.com.ar/)
 
 ## Dependencies
 - JQuery (version 1.8.0 is working). JQuery does the AJAX requests and creats the popup content. (Might be replaceable by [Leaflet-Ajax](https://github.com/calvinmetcalf/leaflet-ajax))
