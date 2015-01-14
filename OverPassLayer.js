@@ -106,21 +106,21 @@ L.OverPassLayer = L.FeatureGroup.extend({
     minzoom: 15,
     endpoint: "http://overpass-api.de/api/",
     query: "(node(BBOX)[organic];node(BBOX)[second_hand];);out qt;",
-    callback: function(map, data) {
+    callback: function(data) {
       for(var i = 0; i < data.elements.length; i++) {
         var e = data.elements[i];
 
         if (e.id in map._ids) return;
-        map._ids[e.id] = true;
+        this._ids[e.id] = true;
         var pos = new L.LatLng(e.lat, e.lon);
-        var popup = map._poiInfo(e.tags,e.id);
+        var popup = this._poiInfo(e.tags,e.id);
         var circle = L.circle(pos, 50, {
           color: 'green',
           fillColor: '#3f0',
           fillOpacity: 0.5
         })
         .bindPopup(popup);
-        map.addLayer(circle);
+        this.addLayer(circle);
       }
     }
   },
@@ -235,7 +235,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
           request.onload = function() {
             if (this.status >= 200 && this.status < 400) {
-              self.options.callback(self, JSON.parse(this.response));
+              self.options.callback.call(self, JSON.parse(this.response));
             } 
           };
 
