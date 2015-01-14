@@ -29,23 +29,23 @@ You can specify an options object as an argument of L.OverPassLayer.
 options: {
   endpoint: "http://overpass.osm.rambler.ru/cgi/",
   query: "node(BBOX)[amenity=post_box];out;",
-  callback: function(data) {
-    for(i=0;i<data.elements.length;i++) {
-      e = data.elements[i];
+  callback: function(map, data) {
+  for(i=0;i<data.elements.length;i++) {
+  var e = data.elements[i];
 
-      if (e.id in this.instance._ids) return;
-      this.instance._ids[e.id] = true;
-      var pos = new L.LatLng(e.lat, e.lon);
-      var popup = this.instance._poiInfo(e.tags);
-      var color = e.tags.collection_times ? 'green':'red';
-      var circle = L.circle(pos, 50, {
-        color: color,
-        fillColor: '#fa3',
-        fillOpacity: 0.5
-      })
-      .bindPopup(popup);
-      this.instance.addLayer(circle);
-    }
+  if (e.id in map._ids) return;
+  map._ids[e.id] = true;
+  var pos = new L.LatLng(e.lat, e.lon);
+  var popup = map._poiInfo(e.tags,e.id);
+  var color = e.tags.collection_times ? 'green':'red';
+  var circle = L.circle(pos, 50, {
+    color: color,
+    fillColor: '#fa3',
+    fillOpacity: 0.5
+  })
+  .bindPopup(popup);
+  map.addLayer(circle);
+}
   },
 };
 ```
@@ -61,7 +61,6 @@ options: {
 
 ## Further Ideas
 - OverPass result to -> geoJSON to -> Leaflet Layer to support ways and areas as well (see also [PoiMap](https://github.com/simon04/POImap/blob/master/railway.html), [OverPassTurbo](https://github.com/tyrasd/overpass-ide/blob/gh-pages/js/overpass.js))
-- remove JQuery dependency
 - improve popup text. use links, format addresses and contact details (compare with [OpenLinkMap](http://www.openlinkmap.org/))
 - improve caching - allow to store data for some days in browser
 
