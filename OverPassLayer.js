@@ -110,17 +110,17 @@ L.OverPassLayer = L.FeatureGroup.extend({
       for(var i = 0; i < data.elements.length; i++) {
         var e = data.elements[i];
 
-        if (e.id in map._ids) return;
-        this._ids[e.id] = true;
+        if (e.id in this.instance._ids) return;
+        this.instance._ids[e.id] = true;
         var pos = new L.LatLng(e.lat, e.lon);
-        var popup = this._poiInfo(e.tags,e.id);
+        var popup = this.instance._poiInfo(e.tags,e.id);
         var circle = L.circle(pos, 50, {
           color: 'green',
           fillColor: '#3f0',
           fillOpacity: 0.5
         })
         .bindPopup(popup);
-        this.addLayer(circle);
+        this.instance.addLayer(circle);
       }
     }
   },
@@ -235,7 +235,8 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
           request.onload = function() {
             if (this.status >= 200 && this.status < 400) {
-              self.options.callback.call(self, JSON.parse(this.response));
+              var reference = {instance: self};
+              self.options.callback.call(reference, JSON.parse(this.response));
             } 
           };
 
