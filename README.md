@@ -30,13 +30,13 @@ options: {
   endpoint: "http://overpass.osm.rambler.ru/cgi/",
   query: "node(BBOX)[amenity=post_box];out;",
   callback: function(data) {
-    for(i=0;i<data.elements.length;i++) {
-      e = data.elements[i];
+    for(var i=0;i<data.elements.length;i++) {
+      var e = data.elements[i];
 
       if (e.id in this.instance._ids) return;
       this.instance._ids[e.id] = true;
       var pos = new L.LatLng(e.lat, e.lon);
-      var popup = this.instance._poiInfo(e.tags);
+      var popup = this.instance._poiInfo(e.tags,e.id);
       var color = e.tags.collection_times ? 'green':'red';
       var circle = L.circle(pos, 50, {
         color: color,
@@ -55,13 +55,11 @@ options: {
 - [pois.elblogdehumitos.com.ar](http://pois.elblogdehumitos.com.ar/)
 
 ## Dependencies
-- JQuery (version 1.8.0 is working). JQuery does the AJAX requests and creats the popup content. (Might be replaceable by [Leaflet-Ajax](https://github.com/calvinmetcalf/leaflet-ajax))
 - Leaflet (tried with version 0.6.2, 0.7.3)
 
 
 ## Further Ideas
 - OverPass result to -> geoJSON to -> Leaflet Layer to support ways and areas as well (see also [PoiMap](https://github.com/simon04/POImap/blob/master/railway.html), [OverPassTurbo](https://github.com/tyrasd/overpass-ide/blob/gh-pages/js/overpass.js))
-- remove JQuery dependency
 - improve popup text. use links, format addresses and contact details (compare with [OpenLinkMap](http://www.openlinkmap.org/))
 - improve caching - allow to store data for some days in browser
 
