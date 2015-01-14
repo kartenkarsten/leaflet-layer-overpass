@@ -29,23 +29,23 @@ You can specify an options object as an argument of L.OverPassLayer.
 options: {
   endpoint: "http://overpass.osm.rambler.ru/cgi/",
   query: "node(BBOX)[amenity=post_box];out;",
-  callback: function(map, data) {
-  for(i=0;i<data.elements.length;i++) {
-  var e = data.elements[i];
+  callback: function(data) {
+    for(i=0;i<data.elements.length;i++) {
+      var e = data.elements[i];
 
-  if (e.id in map._ids) return;
-  map._ids[e.id] = true;
-  var pos = new L.LatLng(e.lat, e.lon);
-  var popup = map._poiInfo(e.tags,e.id);
-  var color = e.tags.collection_times ? 'green':'red';
-  var circle = L.circle(pos, 50, {
-    color: color,
-    fillColor: '#fa3',
-    fillOpacity: 0.5
-  })
-  .bindPopup(popup);
-  map.addLayer(circle);
-}
+      if (e.id in this.instance._ids) return;
+      this.instance._ids[e.id] = true;
+      var pos = new L.LatLng(e.lat, e.lon);
+      var popup = this.instance._poiInfo(e.tags,e.id);
+      var color = e.tags.collection_times ? 'green':'red';
+      var circle = L.circle(pos, 50, {
+        color: color,
+        fillColor: '#fa3',
+        fillOpacity: 0.5
+      })
+      .bindPopup(popup);
+      map.addLayer(circle);
+    }
   },
 };
 ```
@@ -55,7 +55,6 @@ options: {
 - [pois.elblogdehumitos.com.ar](http://pois.elblogdehumitos.com.ar/)
 
 ## Dependencies
-- JQuery (version 1.8.0 is working). JQuery does the AJAX requests and creats the popup content. (Might be replaceable by [Leaflet-Ajax](https://github.com/calvinmetcalf/leaflet-ajax))
 - Leaflet (tried with version 0.6.2, 0.7.3)
 
 
