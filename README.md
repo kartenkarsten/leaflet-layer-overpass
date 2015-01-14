@@ -30,7 +30,7 @@ options: {
   endpoint: "http://overpass.osm.rambler.ru/cgi/",
   query: "node(BBOX)[amenity=post_box];out;",
   callback: function(data) {
-    for(i=0;i<data.elements.length;i++) {
+    for(var i=0;i<data.elements.length;i++) {
       var e = data.elements[i];
 
       if (e.id in this.instance._ids) return;
@@ -44,7 +44,7 @@ options: {
         fillOpacity: 0.5
       })
       .bindPopup(popup);
-      map.addLayer(circle);
+      this.instance.addLayer(circle);
     }
   },
 };
