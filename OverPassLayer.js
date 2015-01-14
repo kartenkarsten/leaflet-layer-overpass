@@ -107,13 +107,12 @@ L.OverPassLayer = L.FeatureGroup.extend({
     endpoint: "http://overpass-api.de/api/",
     query: "(node(BBOX)[organic];node(BBOX)[second_hand];);out qt;",
     callback: function(map, data) {
-      for(i=0;i<data.elements.length;i++) {
+      for(var i = 0; i < data.elements.length; i++) {
         var e = data.elements[i];
 
         if (e.id in map._ids) return;
         map._ids[e.id] = true;
         var pos = new L.LatLng(e.lat, e.lon);
-        var popup = map._poiInfo(e.tags,e.id);
         var popup = map._poiInfo(e.tags,e.id);
         var circle = L.circle(pos, 50, {
           color: 'green',
