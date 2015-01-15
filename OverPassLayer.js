@@ -119,6 +119,12 @@ L.OverPassLayer = L.FeatureGroup.extend({
         this.instance.addLayer(circle);
       }
     },
+    beforeRequest: function() {
+      console.log('about to query the OverPassAPI');
+    },
+    afterRequest: function() {
+      console.log('all queries have finished!');
+    },
     minZoomIndecatorOptions: {
       position: 'bottomleft',
       minZoomMessageNoLayer: "no layer assigned",
@@ -213,11 +219,19 @@ L.OverPassLayer = L.FeatureGroup.extend({
         this._map.getBounds()._northEast.lng,
         this._map.getBounds()._northEast.lat);
 
+        // controls the after/before (Request) callbacks
+        var finished = 0;
+        var queries = bboxList.length;
+        var beforeRequest = true;
+        var afterRequest = true;
+
         for (var i = 0; i < bboxList.length; i++) {
           var bbox = bboxList[i];
           var x = bbox._southWest.lng;
           var y = bbox._northEast.lat;
           if ((x in this._requested) && (y in this._requested[x]) && (this._requested[x][y] == true)) {
+            beforeRequest = false;
+            queries--;
             continue;
           }
           if (!(x in this._requested)) {
@@ -230,6 +244,11 @@ L.OverPassLayer = L.FeatureGroup.extend({
           var queryWithMapCoordinates = this.options.query.replace(/(BBOX)/g, bbox.toOverpassBBoxString());
           var url =  this.options.endpoint + "interpreter?data=[out:json];" + queryWithMapCoordinates;
 
+          if (beforeRequest) {
+	      this.options.beforeRequest();
+	      beforeRequest = false;
+          }
+
           var self = this;
           var request = new XMLHttpRequest();
           request.open("GET", url, true);
@@ -238,6 +257,11 @@ L.OverPassLayer = L.FeatureGroup.extend({
             if (this.status >= 200 && this.status < 400) {
               var reference = {instance: self};
               self.options.callback.call(reference, JSON.parse(this.response));
+              console.debug('queries: ' + queries + ' - finished: ' + finished);
+              if (++finished == queries && afterRequest) {
+		  self.options.afterRequest();
+                  afterRequest = false;
+	      }
             } 
           };
 
