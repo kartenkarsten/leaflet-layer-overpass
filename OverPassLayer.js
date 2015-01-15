@@ -51,12 +51,6 @@ L.Control.MinZoomIdenticator = L.Control.extend({
 
     var className = this.className;
     var container = this._container = L.DomUtil.create('div', className);
-    container.style.fontSize = "2em";
-    container.style.background = "#ffffff";
-    container.style.backgroundColor = "rgba(255,255,255,0.7)";
-    container.style.borderRadius = "10px";
-    container.style.padding = "1px 15px";
-    container.style.oppacity = "0.5";
     map.on('moveend', this._updateBox, this);
     this._updateBox(null);
 
