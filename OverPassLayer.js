@@ -74,9 +74,11 @@ L.Control.MinZoomIdenticator = L.Control.extend({
     }
     var minzoomlevel = this._getMinZoomLevel();
     if (minzoomlevel == -1) {
-      this._container.innerHTML = "no layer assigned";
+      this._container.innerHTML = this.options.minZoomMessageNoLayer;
     }else{
-      this._container.innerHTML = "current Zoom-Level: "+this._map.getZoom()+" all data at Level: "+minzoomlevel;
+      this._container.innerHTML = this.options.minZoomMessage
+	    .replace(/CURRENTZOOM/, this._map.getZoom())
+	    .replace(/MINZOOMLEVEL/, minzoomlevel);
     }
 
     if (this._map.getZoom() >= minzoomlevel) {
@@ -116,7 +118,12 @@ L.OverPassLayer = L.FeatureGroup.extend({
         .bindPopup(popup);
         this.instance.addLayer(circle);
       }
-    }
+    },
+    minZoomIndecatorOptions: {
+      position: 'bottomleft',
+      minZoomMessageNoLayer: "no layer assigned",
+      minZoomMessage: "current Zoom-Level: CURRENTZOOM all data at Level: MINZOOMLEVEL"
+    },
   },
 
   initialize: function (options) {
@@ -247,7 +254,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
       this._zoomControl = map.zoomIndecator;
       this._zoomControl._addLayer(this);
     }else{
-      this._zoomControl = new L.Control.MinZoomIdenticator();
+      this._zoomControl = new L.Control.MinZoomIdenticator(this.options.minZoomIndecatorOptions);
       map.addControl(this._zoomControl);
       this._zoomControl._addLayer(this);
     }
