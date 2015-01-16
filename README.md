@@ -53,6 +53,7 @@ options: {
 ## Used by
 - [Gdzie](http://gdzie.bl.ee/#!7/51.495/20.995/)
 - [pois.elblogdehumitos.com.ar](http://pois.elblogdehumitos.com.ar/)
+- [briefkastenkarte.de](http://briefkastenkarte.de/)
 
 ## Dependencies
 - Leaflet (tried with version 0.6.2, 0.7.3)
