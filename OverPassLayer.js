@@ -77,8 +77,8 @@ L.Control.MinZoomIdenticator = L.Control.extend({
       this._container.innerHTML = this.options.minZoomMessageNoLayer;
     }else{
       this._container.innerHTML = this.options.minZoomMessage
-	    .replace(/CURRENTZOOM/, this._map.getZoom())
-	    .replace(/MINZOOMLEVEL/, minzoomlevel);
+          .replace(/CURRENTZOOM/, this._map.getZoom())
+          .replace(/MINZOOMLEVEL/, minzoomlevel);
     }
 
     if (this._map.getZoom() >= minzoomlevel) {
@@ -221,32 +221,29 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
         // controls the after/before (Request) callbacks
         var finished = 0;
-        var queries = bboxList.length;
+        var querycount = bboxList.length;
         var beforeRequest = true;
-        var afterRequest = true;
 
         for (var i = 0; i < bboxList.length; i++) {
           var bbox = bboxList[i];
           var x = bbox._southWest.lng;
           var y = bbox._northEast.lat;
           if ((x in this._requested) && (y in this._requested[x]) && (this._requested[x][y] == true)) {
-            beforeRequest = false;
-            queries--;
+            querycount--;
             continue;
           }
           if (!(x in this._requested)) {
             this._requested[x] = {};
           }
           this._requested[x][y] = true;
-          //this.addBBox(x,bbox._southWest.lat,bbox._northEast.lng,y);
 
 
           var queryWithMapCoordinates = this.options.query.replace(/(BBOX)/g, bbox.toOverpassBBoxString());
           var url =  this.options.endpoint + "interpreter?data=[out:json];" + queryWithMapCoordinates;
 
           if (beforeRequest) {
-	      this.options.beforeRequest();
-	      beforeRequest = false;
+              this.options.beforeRequest();
+              beforeRequest = false;
           }
 
           var self = this;
@@ -257,11 +254,10 @@ L.OverPassLayer = L.FeatureGroup.extend({
             if (this.status >= 200 && this.status < 400) {
               var reference = {instance: self};
               self.options.callback.call(reference, JSON.parse(this.response));
-              console.debug('queries: ' + queries + ' - finished: ' + finished);
-              if (++finished == queries && afterRequest) {
-		  self.options.afterRequest();
-                  afterRequest = false;
-	      }
+              console.debug('querycount: ' + querycount + ' - finished: ' + finished);
+              if (++finished == querycount) {
+                  self.options.afterRequest();
+              }
             } 
           };
 
