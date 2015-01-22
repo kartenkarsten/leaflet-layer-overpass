@@ -16,7 +16,7 @@ var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 1
 
 //OverPassAPI overlay
 var opl = new L.OverPassLayer({
-  query: "node(BBOX)[amenity=post_box];out;",
+  query: "node(BBOX)['amenity'='post_box'];out;",
 }
 
 map.addLayer(opl);
@@ -28,7 +28,7 @@ You can specify an options object as an argument of L.OverPassLayer.
 ```javascript
 options: {
   endpoint: "http://overpass.osm.rambler.ru/cgi/",
-  query: "node(BBOX)[amenity=post_box];out;",
+  query: "node(BBOX)['amenity'='post_box'];out;",
   callback: function(data) {
     for(var i=0;i<data.elements.length;i++) {
       var e = data.elements[i];

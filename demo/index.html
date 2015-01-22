@@ -31,7 +31,7 @@
     //OverPassAPI overlay
     var opl = new L.OverPassLayer({
       endpoint: "http://overpass.osm.rambler.ru/cgi/",
-      query: "node(BBOX)[amenity=post_box];out;",
+      query: "node(BBOX)['amenity'='post_box'];out;",
       callback: function(data) {
         for(var i=0;i<data.elements.length;i++) {
           var e = data.elements[i];
