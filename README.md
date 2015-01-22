@@ -47,6 +47,11 @@ options: {
       this.instance.addLayer(circle);
     }
   },
+  minZoomIndicatorOptions: {
+    position: 'topright',
+    minZoomMessageNoLayer: "no layer assigned",
+    minZoomMessage: "current Zoom-Level: CURRENTZOOM all data at Level: MINZOOMLEVEL"
+  }
 };
 ```
 

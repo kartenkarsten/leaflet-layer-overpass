@@ -1,6 +1,6 @@
 {
   "name": "leaflet-layer-overpass",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/kartenkarsten/leaflet-layer-overpass",
   "authors": [
     "Karsten Hinz <k.hinz@tu-bs.de>",
