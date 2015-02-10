@@ -1,5 +1,6 @@
 Leaflet Layer OverPass
 =============================
+[![Bower version](https://badge.fury.io/bo/leaflet-layer-overpass.svg)](http://badge.fury.io/bo/leaflet-layer-overpass)
 
 ## What is it ?
 A [Leaflet](http://leafletjs.com/) Plugin to create a custom POI overlay - thanks to the [OSM](http://www.openstreetmap.org/)-Dataset and the [OverPass-API](http://overpass-api.de/)
