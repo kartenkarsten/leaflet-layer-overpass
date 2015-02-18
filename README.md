@@ -64,6 +64,24 @@ options: {
 ## Dependencies
 - Leaflet (tried with version 0.6.2, 0.7.3)
 
+## Development
+In order to contribute to the project you should first clone the repository. The javascript source files
+reside in the `src` folder and are concatenated and minified by gulp. If you want to make changes
+make them in the `src` folder and then build the `dist` file with gulp.
+For that you first need to install gulp if you do not have it instaled yet
+```
+$ npm install --global gulp
+```
+The install all the needed packages for this project:
+```
+$ npm install 
+```
+And the just run
+```
+gulp
+``` 
+when you added your changes. This will combine (and minify) the files and put them into the `dist` folder.
+
 
 ## Further Ideas
 - OverPass result to -> geoJSON to -> Leaflet Layer to support ways and areas as well (see also [PoiMap](https://github.com/simon04/POImap/blob/master/railway.html), [OverPassTurbo](https://github.com/tyrasd/overpass-ide/blob/gh-pages/js/overpass.js))
