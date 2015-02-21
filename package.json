@@ -2,13 +2,13 @@
   "name": "leaflet-layer-overpass",
   "version": "1.0.1",
   "main": "gulpfile.js",
-  "dependencies": {
+  "devDependencies": {
     "gulp-concat": "^2.5.0",
     "gulp-rename": "^1.2.0",
     "gulp": "^3.8.11",
     "gulp-uglify": "^1.1.0"
   },
-  "devDependencies": {},
+  "dependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,6 +16,6 @@
     "type": "git",
     "url": "https://github.com/kartenkarsten/leaflet-layer-overpass/"
   },
-  "author": "",
+  "author": "Karsten Hinz",
   "license": "MIT"
 }
