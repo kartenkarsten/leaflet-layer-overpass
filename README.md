@@ -18,7 +18,7 @@ var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 1
 //OverPassAPI overlay
 var opl = new L.OverPassLayer({
   query: "node(BBOX)['amenity'='post_box'];out;",
-}
+});
 
 map.addLayer(opl);
 ```
