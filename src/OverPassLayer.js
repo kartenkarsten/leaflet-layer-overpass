@@ -15,7 +15,12 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
         if (e.id in this.instance._ids) return;
         this.instance._ids[e.id] = true;
-        var pos = new L.LatLng(e.lat, e.lon);
+        var pos;
+        if (e.type == "node") {
+          pos = new L.LatLng(e.lat, e.lon);
+        } else {
+          pos = new L.LatLng(e.center.lat, e.center.lon);
+        }
         var popup = this.instance._poiInfo(e.tags,e.id);
         var circle = L.circle(pos, 50, {
           color: 'green',
