@@ -6,6 +6,7 @@ L.LatLngBounds.prototype.toOverpassBBoxString = function (){
 
 L.OverPassLayer = L.FeatureGroup.extend({
   options: {
+    debug: false,
     minzoom: 15,
     endpoint: "http://overpass-api.de/api/",
     query: "(node(BBOX)[organic];node(BBOX)[second_hand];);out qt;",
@@ -32,10 +33,14 @@ L.OverPassLayer = L.FeatureGroup.extend({
       }
     },
     beforeRequest: function() {
-      console.log('about to query the OverPassAPI');
+      if (this.options.debug) {
+        console.debug('about to query the OverPassAPI');
+      }
     },
     afterRequest: function() {
-      console.log('all queries have finished!');
+      if (this.options.debug) {
+        console.debug('all queries have finished!');
+      }
     },
     minZoomIndicatorOptions: {
       position: 'bottomleft',
@@ -73,7 +78,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
   */
   long2tile: function (lon,zoom) { return (Math.floor((lon+180)/360*Math.pow(2,zoom))); },
   lat2tile: function (lat,zoom)  {
-    return (Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom))); 
+    return (Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom)));
   },
   tile2long: function (x,z) {
     return (x/Math.pow(2,z)*360-180);
@@ -121,7 +126,9 @@ L.OverPassLayer = L.FeatureGroup.extend({
   },
 
   onMoveEnd: function () {
-    console.log("load Pois");
+    if (this.options.debug) {
+      console.debug("load Pois");
+    }
     //console.log(this._map.getBounds());
     if (this._map.getZoom() >= this.options.minzoom) {
       //var bboxList = new Array(this._map.getBounds());
@@ -154,7 +161,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
           var url =  this.options.endpoint + "interpreter?data=[out:json];" + queryWithMapCoordinates;
 
           if (beforeRequest) {
-              this.options.beforeRequest();
+              this.options.beforeRequest.call(this);
               beforeRequest = false;
           }
 
@@ -166,11 +173,13 @@ L.OverPassLayer = L.FeatureGroup.extend({
             if (this.status >= 200 && this.status < 400) {
               var reference = {instance: self};
               self.options.callback.call(reference, JSON.parse(this.response));
-              console.debug('queryCount: ' + queryCount + ' - finishedCount: ' + finishedCount);
-              if (++finishedCount == queryCount) {
-                  self.options.afterRequest();
+              if (self.options.debug) {
+                console.debug('queryCount: ' + queryCount + ' - finishedCount: ' + finishedCount);
               }
-            } 
+              if (++finishedCount == queryCount) {
+                  self.options.afterRequest.call(self);
+              }
+            }
           };
 
           request.send();
@@ -195,11 +204,15 @@ L.OverPassLayer = L.FeatureGroup.extend({
     if (this.options.query.indexOf("(BBOX)") != -1) {
       map.on('moveend', this.onMoveEnd, this);
     }
-    console.log("add layer");
+    if (this.options.debug) {
+      console.debug("add layer");
+    }
   },
 
   onRemove: function (map) {
-    console.log("remove layer");
+    if (this.options.debug) {
+      console.debug("remove layer");
+    }
     L.LayerGroup.prototype.onRemove.call(this, map);
     this._ids = {};
     this._requested = {};
@@ -213,7 +226,9 @@ L.OverPassLayer = L.FeatureGroup.extend({
   },
 
   getData: function () {
-    console.log(this._data);
+    if (this.options.debug) {
+      console.debug(this._data);
+    }
     return this._data;
   }
 
