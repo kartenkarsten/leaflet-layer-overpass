@@ -40,6 +40,7 @@ You can specify an options object as an argument of L.OverPassLayer.
 options: {
   endpoint: "http://overpass.osm.rambler.ru/cgi/",
   query: "node(BBOX)['amenity'='post_box'];out;",
+  debug: false,
   callback: function(data) {
     for(var i=0;i<data.elements.length;i++) {
       var e = data.elements[i];
