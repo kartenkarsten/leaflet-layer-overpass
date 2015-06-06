@@ -1,4 +1,4 @@
-L.Control.MinZoomIdenticator = L.Control.extend({
+L.Control.MinZoomIndicator = L.Control.extend({
   options: {
     position: 'bottomleft',
   },
@@ -47,16 +47,10 @@ L.Control.MinZoomIdenticator = L.Control.extend({
 
   onAdd: function (map) {
     this._map = map;
-    map.zoomIndecator = this;
+    map.zoomIndicator = this;
 
     var className = this.className;
     var container = this._container = L.DomUtil.create('div', className);
-    container.style.fontSize = "2em";
-    container.style.background = "#ffffff";
-    container.style.backgroundColor = "rgba(255,255,255,0.7)";
-    container.style.borderRadius = "10px";
-    container.style.padding = "1px 15px";
-    container.style.oppacity = "0.5";
     map.on('moveend', this._updateBox, this);
     this._updateBox(null);
 
@@ -80,9 +74,11 @@ L.Control.MinZoomIdenticator = L.Control.extend({
     }
     var minzoomlevel = this._getMinZoomLevel();
     if (minzoomlevel == -1) {
-      this._container.innerHTML = "no layer assigned";
+      this._container.innerHTML = this.options.minZoomMessageNoLayer;
     }else{
-      this._container.innerHTML = "current Zoom-Level: "+this._map.getZoom()+" all data at Level: "+minzoomlevel;
+      this._container.innerHTML = this.options.minZoomMessage
+          .replace(/CURRENTZOOM/, this._map.getZoom())
+          .replace(/MINZOOMLEVEL/, minzoomlevel);
     }
 
     if (this._map.getZoom() >= minzoomlevel) {
@@ -92,7 +88,7 @@ L.Control.MinZoomIdenticator = L.Control.extend({
     }
   },
 
-  className : 'leaflet-control-minZoomIndecator'
+  className : 'leaflet-control-minZoomIndicator'
 });
 
 L.LatLngBounds.prototype.toOverpassBBoxString = function (){
@@ -103,6 +99,7 @@ L.LatLngBounds.prototype.toOverpassBBoxString = function (){
 
 L.OverPassLayer = L.FeatureGroup.extend({
   options: {
+    debug: false,
     minzoom: 15,
     endpoint: "http://overpass-api.de/api/",
     query: "(node(BBOX)[organic];node(BBOX)[second_hand];);out qt;",
@@ -112,7 +109,12 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
         if (e.id in this.instance._ids) return;
         this.instance._ids[e.id] = true;
-        var pos = new L.LatLng(e.lat, e.lon);
+        var pos;
+        if (e.type == "node") {
+          pos = new L.LatLng(e.lat, e.lon);
+        } else {
+          pos = new L.LatLng(e.center.lat, e.center.lon);
+        }
         var popup = this.instance._poiInfo(e.tags,e.id);
         var circle = L.circle(pos, 50, {
           color: 'green',
@@ -122,7 +124,22 @@ L.OverPassLayer = L.FeatureGroup.extend({
         .bindPopup(popup);
         this.instance.addLayer(circle);
       }
-    }
+    },
+    beforeRequest: function() {
+      if (this.options.debug) {
+        console.debug('about to query the OverPassAPI');
+      }
+    },
+    afterRequest: function() {
+      if (this.options.debug) {
+        console.debug('all queries have finished!');
+      }
+    },
+    minZoomIndicatorOptions: {
+      position: 'bottomleft',
+      minZoomMessageNoLayer: "no layer assigned",
+      minZoomMessage: "current Zoom-Level: CURRENTZOOM all data at Level: MINZOOMLEVEL"
+    },
   },
 
   initialize: function (options) {
@@ -154,7 +171,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
   */
   long2tile: function (lon,zoom) { return (Math.floor((lon+180)/360*Math.pow(2,zoom))); },
   lat2tile: function (lat,zoom)  {
-    return (Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom))); 
+    return (Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom)));
   },
   tile2long: function (x,z) {
     return (x/Math.pow(2,z)*360-180);
@@ -202,7 +219,9 @@ L.OverPassLayer = L.FeatureGroup.extend({
   },
 
   onMoveEnd: function () {
-    console.log("load Pois");
+    if (this.options.debug) {
+      console.debug("load Pois");
+    }
     //console.log(this._map.getBounds());
     if (this._map.getZoom() >= this.options.minzoom) {
       //var bboxList = new Array(this._map.getBounds());
@@ -212,22 +231,32 @@ L.OverPassLayer = L.FeatureGroup.extend({
         this._map.getBounds()._northEast.lng,
         this._map.getBounds()._northEast.lat);
 
+        // controls the after/before (Request) callbacks
+        var finishedCount = 0;
+        var queryCount = bboxList.length;
+        var beforeRequest = true;
+
         for (var i = 0; i < bboxList.length; i++) {
           var bbox = bboxList[i];
           var x = bbox._southWest.lng;
           var y = bbox._northEast.lat;
           if ((x in this._requested) && (y in this._requested[x]) && (this._requested[x][y] == true)) {
+            queryCount--;
             continue;
           }
           if (!(x in this._requested)) {
             this._requested[x] = {};
           }
           this._requested[x][y] = true;
-          //this.addBBox(x,bbox._southWest.lat,bbox._northEast.lng,y);
 
 
           var queryWithMapCoordinates = this.options.query.replace(/(BBOX)/g, bbox.toOverpassBBoxString());
           var url =  this.options.endpoint + "interpreter?data=[out:json];" + queryWithMapCoordinates;
+
+          if (beforeRequest) {
+              this.options.beforeRequest.call(this);
+              beforeRequest = false;
+          }
 
           var self = this;
           var request = new XMLHttpRequest();
@@ -237,7 +266,13 @@ L.OverPassLayer = L.FeatureGroup.extend({
             if (this.status >= 200 && this.status < 400) {
               var reference = {instance: self};
               self.options.callback.call(reference, JSON.parse(this.response));
-            } 
+              if (self.options.debug) {
+                console.debug('queryCount: ' + queryCount + ' - finishedCount: ' + finishedCount);
+              }
+              if (++finishedCount == queryCount) {
+                  self.options.afterRequest.call(self);
+              }
+            }
           };
 
           request.send();
@@ -249,11 +284,11 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
   onAdd: function (map) {
     this._map = map;
-    if (map.zoomIndecator) {
-      this._zoomControl = map.zoomIndecator;
+    if (map.zoomIndicator) {
+      this._zoomControl = map.zoomIndicator;
       this._zoomControl._addLayer(this);
     }else{
-      this._zoomControl = new L.Control.MinZoomIdenticator();
+      this._zoomControl = new L.Control.MinZoomIndicator(this.options.minZoomIndicatorOptions);
       map.addControl(this._zoomControl);
       this._zoomControl._addLayer(this);
     }
@@ -262,11 +297,15 @@ L.OverPassLayer = L.FeatureGroup.extend({
     if (this.options.query.indexOf("(BBOX)") != -1) {
       map.on('moveend', this.onMoveEnd, this);
     }
-    console.log("add layer");
+    if (this.options.debug) {
+      console.debug("add layer");
+    }
   },
 
   onRemove: function (map) {
-    console.log("remove layer");
+    if (this.options.debug) {
+      console.debug("remove layer");
+    }
     L.LayerGroup.prototype.onRemove.call(this, map);
     this._ids = {};
     this._requested = {};
@@ -280,7 +319,9 @@ L.OverPassLayer = L.FeatureGroup.extend({
   },
 
   getData: function () {
-    console.log(this._data);
+    if (this.options.debug) {
+      console.debug(this._data);
+    }
     return this._data;
   }
 
