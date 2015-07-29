@@ -8,6 +8,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
   options: {
     debug: false,
     minzoom: 15,
+    requestPerTile: true,
     endpoint: "http://overpass-api.de/api/",
     query: "(node(BBOX)[organic];node(BBOX)[second_hand];);out qt;",
     callback: function(data) {
@@ -131,12 +132,15 @@ L.OverPassLayer = L.FeatureGroup.extend({
     }
     //console.log(this._map.getBounds());
     if (this._map.getZoom() >= this.options.minzoom) {
-      //var bboxList = new Array(this._map.getBounds());
-      var bboxList = this._view2BBoxes(
-        this._map.getBounds()._southWest.lng,
-        this._map.getBounds()._southWest.lat,
-        this._map.getBounds()._northEast.lng,
-        this._map.getBounds()._northEast.lat);
+      if (this.options.requestPerTile) {
+        var bboxList = this._view2BBoxes(
+          this._map.getBounds()._southWest.lng,
+          this._map.getBounds()._southWest.lat,
+          this._map.getBounds()._northEast.lng,
+          this._map.getBounds()._northEast.lat);
+      } else {
+        var bboxList = new Array(this._map.getBounds());
+      }
 
         // controls the after/before (Request) callbacks
         var finishedCount = 0;
