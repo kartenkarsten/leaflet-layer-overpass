@@ -103,7 +103,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
     minzoom: 15,
     requestPerTile: true,
     endpoint: "http://overpass-api.de/api/",
-    query: "(node(BBOX)[organic];node(BBOX)[second_hand];);out qt;",
+    query: "(node({{bbox}})[organic];node({{bbox}})[second_hand];);out qt;",
     callback: function(data) {
       for(var i = 0; i < data.elements.length; i++) {
         var e = data.elements[i];
@@ -254,7 +254,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
           this._requested[x][y] = true;
 
 
-          var queryWithMapCoordinates = this.options.query.replace(/(BBOX)/g, bbox.toOverpassBBoxString());
+          var queryWithMapCoordinates = this.options.query.replace(/(\{\{bbox\}\})/g, bbox.toOverpassBBoxString());
           var url =  this.options.endpoint + "interpreter?data=[out:json];" + queryWithMapCoordinates;
 
           if (beforeRequest) {
@@ -298,7 +298,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
     }
 
     this.onMoveEnd();
-    if (this.options.query.indexOf("(BBOX)") != -1) {
+    if (this.options.query.indexOf("({{bbox}})") != -1) {
       map.on('moveend', this.onMoveEnd, this);
     }
     if (this.options.debug) {
