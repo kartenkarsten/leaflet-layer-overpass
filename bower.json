@@ -1,13 +1,14 @@
 {
-  "name": "leaflet-layer-overpass",
-  "version": "1.0.2",
-  "homepage": "https://github.com/kartenkarsten/leaflet-layer-overpass",
+  "name": "leaflet-overpass-layer",
+  "version": "1.1.0",
+  "homepage": "https://github.com/GuillaumeAmat/leaflet-overpass-layer",
   "authors": [
     "Karsten Hinz <k.hinz@tu-bs.de>",
-    "Knut Hühne <knut@k-nut.eu>"
+    "Knut Hühne <knut@k-nut.eu>",
+    "Guillaume Amat <guillaume@amat.io>"
   ],
-  "description": "simply add an overpass layer to a leafleat map",
-  "main": "OverPassLayer.js",
+  "description": "Simply add an overpass layer to a leafleat map",
+  "main": "dist/OverPassLayer.min.js",
   "keywords": [
     "leaflet",
     "overpass",
@@ -21,9 +22,6 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "demo",
-    "test",
-    "tests"
   ],
   "dependencies": {
     "leaflet": "~0.7.3"
