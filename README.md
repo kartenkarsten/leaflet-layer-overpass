@@ -11,6 +11,11 @@ I will publish proper versions but for now, here is a list of changes made after
  * Tabs instead of spaces for indentation
  * Spaces between blocks
 
+* Options are now in camelCase: `endpoint` is `endPoint` and so on
+* Rename the `callback` option to `onSuccess`
+* Add the `timeout` option
+* Add the `onError` and `onTimeout` callbacks
+
 
 ## What is it?
 A [Leaflet](http://leafletjs.com/) plugin to create a custom POI overlay - thanks to the [OSM](http://www.openstreetmap.org/) dataset and the [Overpass API](http://overpass-api.de/)

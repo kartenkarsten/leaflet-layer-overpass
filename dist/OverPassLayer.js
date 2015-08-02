@@ -135,8 +135,17 @@ L.OverPassLayer = L.FeatureGroup.extend({
 		'requestPerTile': true,
 		'endpoint': 'http://overpass-api.de/api/',
 		'query': '(node({{bbox}})[organic];node({{bbox}})[second_hand];);out qt;',
+		'timeout': 30 * 1000,
 
-		callback: function(data) {
+		beforeRequest: function() {
+
+		},
+
+		afterRequest: function() {
+
+		},
+
+		onSuccess: function(data) {
 
 			for(var i = 0; i < data.elements.length; i++) {
 
@@ -168,13 +177,14 @@ L.OverPassLayer = L.FeatureGroup.extend({
 			}
 		},
 
-		beforeRequest: function() {
+		onError: function() {
 
 		},
 
-		afterRequest: function() {
+		onTimeout: function() {
 
 		},
+
 		minZoomIndicatorOptions: {
 
 			'position': 'bottomleft',
@@ -337,21 +347,32 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
 	sendRequest: function(url, done) {
 
-		var self = this;
+		var self = this,
+		reference = { 'instance': this };
 
 		request = new XMLHttpRequest();
 		request.open('GET', url, true);
+		request.timeout = this.options.timeout;
+
+		request.ontimeout = function () {
+
+			self.options.onTimeout.call(reference, this);
+
+			done();
+		};
 
 		request.onload = function () {
 
 			if (this.status >= 200 && this.status < 400) {
 
-				var reference = {'instance': self};
-
 				self.options.callback.call(reference, JSON.parse(this.response));
-
-				done();
 			}
+			else {
+
+				self.options.onError.call(reference, this);
+			}
+
+			done();
 		};
 
 		request.send();
