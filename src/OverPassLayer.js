@@ -17,6 +17,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
 		'endPoint': 'http://overpass-api.de/api/',
 		'query': '(node({{bbox}})[organic];node({{bbox}})[second_hand];);out qt;',
 		'timeout': 30 * 1000, // Milliseconds
+		'retryOnTimeout': false,
 
 		beforeRequest: function() {
 
@@ -222,7 +223,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
 					if ( beforeRequestResult === false ) {
 
 						this.options.afterRequest.call(this);
-						
+
 						return;
 					}
 
@@ -247,7 +248,14 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
 			self.options.onTimeout.call(reference, this);
 
-			done();
+			if ( self.options.retryOnTimeout ) {
+
+				self.sendRequest( url, done );
+			}
+			else {
+
+				done();
+			}
 		};
 
 		request.onload = function () {
