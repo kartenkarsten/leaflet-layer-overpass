@@ -18,6 +18,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
 		'query': '(node({{bbox}})[organic];node({{bbox}})[second_hand];);out qt;',
 		'timeout': 30 * 1000, // Milliseconds
 		'retryOnTimeout': false,
+		'noInitialRequest': false,
 
 		beforeRequest: function() {
 
@@ -292,7 +293,10 @@ L.OverPassLayer = L.FeatureGroup.extend({
 			this._zoomControl._addLayer(this);
 		}
 
-		this.onMoveEnd();
+		if ( !this.options.noInitialRequest ) {
+
+			this.onMoveEnd();
+		}
 
 		if (this.options.query.indexOf('({{bbox}})') !== -1) {
 
