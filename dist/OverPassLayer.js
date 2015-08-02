@@ -131,11 +131,11 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
 	options: {
 
-		'minzoom': 15,
+		'minZoom': 15,
 		'requestPerTile': true,
-		'endpoint': 'http://overpass-api.de/api/',
+		'endPoint': 'http://overpass-api.de/api/',
 		'query': '(node({{bbox}})[organic];node({{bbox}})[second_hand];);out qt;',
-		'timeout': 30 * 1000,
+		'timeout': 30 * 1000, // Milliseconds
 
 		beforeRequest: function() {
 
@@ -365,7 +365,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
 			if (this.status >= 200 && this.status < 400) {
 
-				self.options.callback.call(reference, JSON.parse(this.response));
+				self.options.onSuccess.call(reference, JSON.parse(this.response));
 			}
 			else {
 
