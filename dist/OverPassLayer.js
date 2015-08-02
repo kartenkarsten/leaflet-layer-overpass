@@ -136,6 +136,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
 		'endPoint': 'http://overpass-api.de/api/',
 		'query': '(node({{bbox}})[organic];node({{bbox}})[second_hand];);out qt;',
 		'timeout': 30 * 1000, // Milliseconds
+		'retryOnTimeout': false,
 
 		beforeRequest: function() {
 
@@ -283,7 +284,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
 	onMoveEnd: function () {
 
-		if (this._map.getZoom() >= this.options.minzoom) {
+		if (this._map.getZoom() >= this.options.minZoom) {
 
 			var x, y, bbox, bboxList, request, url, queryWithMapCoordinates,
 			self = this,
@@ -332,11 +333,19 @@ L.OverPassLayer = L.FeatureGroup.extend({
 				this._requested[x][y] = true;
 
 				queryWithMapCoordinates = this.options.query.replace(/(\{\{bbox\}\})/g, bbox.toOverpassBBoxString());
-				url = this.options.endpoint + 'interpreter?data=[out:json];'+ queryWithMapCoordinates;
+				url = this.options.endPoint + 'interpreter?data=[out:json];'+ queryWithMapCoordinates;
 
 				if (beforeRequest) {
 
-					this.options.beforeRequest.call(this);
+					var beforeRequestResult = this.options.beforeRequest.call(this);
+
+					if ( beforeRequestResult === false ) {
+
+						this.options.afterRequest.call(this);
+
+						return;
+					}
+
 					beforeRequest = false;
 				}
 
@@ -358,7 +367,14 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
 			self.options.onTimeout.call(reference, this);
 
-			done();
+			if ( self.options.retryOnTimeout ) {
+
+				self.sendRequest( url, done );
+			}
+			else {
+
+				done();
+			}
 		};
 
 		request.onload = function () {
