@@ -283,7 +283,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
 	onMoveEnd: function () {
 
-		if (this._map.getZoom() >= this.options.minzoom) {
+		if (this._map.getZoom() >= this.options.minZoom) {
 
 			var x, y, bbox, bboxList, request, url, queryWithMapCoordinates,
 			self = this,
@@ -332,7 +332,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
 				this._requested[x][y] = true;
 
 				queryWithMapCoordinates = this.options.query.replace(/(\{\{bbox\}\})/g, bbox.toOverpassBBoxString());
-				url = this.options.endpoint + 'interpreter?data=[out:json];'+ queryWithMapCoordinates;
+				url = this.options.endPoint + 'interpreter?data=[out:json];'+ queryWithMapCoordinates;
 
 				if (beforeRequest) {
 
