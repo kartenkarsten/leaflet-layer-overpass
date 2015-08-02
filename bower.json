@@ -21,7 +21,7 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
+    "bower_components"
   ],
   "dependencies": {
     "leaflet": "~0.7.3"
