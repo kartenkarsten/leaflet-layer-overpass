@@ -217,7 +217,15 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
 				if (beforeRequest) {
 
-					this.options.beforeRequest.call(this);
+					var beforeRequestResult = this.options.beforeRequest.call(this);
+
+					if ( beforeRequestResult === false ) {
+
+						this.options.afterRequest.call(this);
+						
+						return;
+					}
+
 					beforeRequest = false;
 				}
 
