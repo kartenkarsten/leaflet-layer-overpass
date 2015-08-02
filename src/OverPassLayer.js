@@ -246,7 +246,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
 			if (this.status >= 200 && this.status < 400) {
 
-				self.options.callback.call(reference, JSON.parse(this.response));
+				self.options.onSuccess.call(reference, JSON.parse(this.response));
 			}
 			else {
 
