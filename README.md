@@ -2,7 +2,7 @@
 
 This plugin is a fork of https://github.com/kartenkarsten/leaflet-layer-overpass
 
-I will publish proper versions but for now, here is a list of changes made after the fork:
+Here is a list of changes made after the fork:
 
 * Replace `{{bbox}}` instead of `BBOX` in Overpass requests
 * Code cleanup
@@ -15,6 +15,9 @@ I will publish proper versions but for now, here is a list of changes made after
 * Rename the `callback` option to `onSuccess`
 * Add the `timeout` option
 * Add the `onError` and `onTimeout` callbacks
+
+
+The first release of this fork is the version **1.1.0**.
 
 
 ## What is it?
@@ -62,16 +65,22 @@ You can specify an options object as an argument of L.OverPassLayer.
 ```javascript
 options: {
 
-  'endpoint': 'http://overpass.osm.rambler.ru/cgi/',
-  'query': 'node({{bbox}})['amenity'='post_box'];out;',
+  'minZoom': 15,
   'requestPerTile': true,
-  'callback': function(data) {},
+  'endPoint': 'http://overpass.osm.rambler.ru/cgi/',
+  'query': 'node({{bbox}})["amenity"="post_box"];out;',
+  'timeout': 30 * 1000, // Milliseconds
   'minZoomIndicatorOptions': {
 
     'position': 'topright',
     'minZoomMessageNoLayer': 'no layer assigned',
     'minZoomMessage': 'current Zoom-Level: CURRENTZOOM all data at Level: MINZOOMLEVEL'
-  }
+},
+  'beforeRequest': function() {},
+  'afterRequest': function() {},
+  'onSuccess': function(data) {},
+  'onError': function(xhr) {},
+  'onTimeout': function(xhr) {},
 };
 ```
 
@@ -100,9 +109,3 @@ And then just run
 gulp
 ```
 after you made your changes. This will combine (and minify) the files and put them into the `dist` folder.
-
-
-## Further Ideas
-- OverPass result to -> geoJSON to -> Leaflet Layer to support ways and areas as well (see also [PoiMap](https://github.com/simon04/POImap/blob/master/railway.html), [OverPassTurbo](https://github.com/tyrasd/overpass-ide/blob/gh-pages/js/overpass.js))
-- improve popup text. use links, format addresses and contact details (compare with [OpenLinkMap](http://www.openlinkmap.org/))
-- improve caching - allow to store data for some days in browser
