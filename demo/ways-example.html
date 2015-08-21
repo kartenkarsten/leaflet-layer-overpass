@@ -1,0 +1,37 @@
+<html>
+<head>
+    <!--
+        Demo using Overpass to highlight OpenStreetMap Ways.
+
+        Author: Philip Shore (pshore2@gmail.com)
+
+        England has complex access rules for Ways. This demo adds a coloured overlay to tracks
+        indicating what type of vehicle can use the track.
+
+          pink = motorcar
+          blue = motorcycle
+          green = bicycle
+          red = foot
+          yellow = unspecified
+          dashed = permissive
+
+        Click a highlighted track for a popup with all tags.
+        
+        The queries on overpass are intensive and so are only made when at zoom level 14 or
+        higher. Be patient on initial load. 
+    -->
+    <meta charset="UTF-8">
+    <title>OverPass Layer Demo - way highlighting</title>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="../dist/OverPassLayer.js"></script>
+    <script src="ways-example.js"></script>
+    <style>.leaflet-popup-content td { vertical-align:top; }</style>
+</head>
+<body>
+    <div id="map1" class="map" style="float:left; width:100%; height:100%;"></div>
+</body>
+
+<script> startmap('map1'); </script>
+
+</html>
