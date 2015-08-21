@@ -51,7 +51,7 @@ function TrackAccessOverPassLayer() {
           var e = data.elements[i];
           var type = e['type']; 
           
-          if( type!="way" && type!="node" ) {
+          if( type!=="way" && type!=="node" ) {
             continue; 
           }
         
@@ -110,20 +110,20 @@ function chooseTrackStyle(tags) {
 
   try {  
       // add access tags based designation, overrides.
-      if(tags.designation=="byway_open_to_all_traffic") {
+      if(tags.designation==="byway_open_to_all_traffic") {
         if(tags.motor_vehicle==null) { tags.motor_vehicle="yes"; }
         if(tags.bicycle==null) { tags.bicycle="yes"; }
         if(tags.foot==null) { tags.foot="yes"; }
       }  
-      else if(tags.designation=="restricted_byway") {
+      else if(tags.designation==="restricted_byway") {
         // rely on access tags otherwise defaults to yellow
         tags.access="permissive"; 
       }
-      else if(tags.designation=="public_bridleway" || tags.designation=="permissive_bridleway" ) {
+      else if(tags.designation==="public_bridleway" || tags.designation==="permissive_bridleway" ) {
         if(tags.bicycle==null) { tags.bicycle="yes"; }
         if(tags.foot==null) { tags.foot="yes"; }
       }
-      else if(tags.designation=="public_footpath" || tags.designation=="permissive_footpath" ) {
+      else if(tags.designation==="public_footpath" || tags.designation==="permissive_footpath" ) {
         if(tags.foot==null) { tags.foot="yes"; }
       }      
 
@@ -145,35 +145,35 @@ function chooseTrackStyle(tags) {
 
       // These are the supported tags in our algorithm: 
       if (tags.designation!=null &&
-          tags.designation!='byway_open_to_all_traffic' && 
-          tags.designation!='restricted_byway' &&
-          tags.designation!='public_bridleway' &&
-          tags.designation!='public_footpath' &&
-          tags.designation!='permissive_footpath' &&
-          tags.designation!='permissive_bridleway')
+          tags.designation!=='byway_open_to_all_traffic' && 
+          tags.designation!=='restricted_byway' &&
+          tags.designation!=='public_bridleway' &&
+          tags.designation!=='public_footpath' &&
+          tags.designation!=='permissive_footpath' &&
+          tags.designation!=='permissive_bridleway')
       {
           // tag needs correcting?
           return { color: '#000000', dashArray:otherdash }
       }
 
       // try to mark up full-time non-permissive first.
-      if(tags.motor_vehicle=="yes" || tags.motorcar=="yes") {
+      if(tags.motor_vehicle==="yes" || tags.motorcar==="yes") {
           return { color: motorcarcol } ;
-      } else if ( tags.motorcycle=="yes") {
+      } else if ( tags.motorcycle==="yes") {
           return { color: motorcyclecol } ;
-      } else if ( tags.bicycle=="yes" ) {
+      } else if ( tags.bicycle==="yes" ) {
           return { color: bicyclecol } ;
-      } else if ( tags.foot=="yes" ) {
+      } else if ( tags.foot==="yes" ) {
           return { color: footcol } ;
-      } else if(tags.motor_vehicle=="permissive" || tags.motorcar=="permissive") {
+      } else if(tags.motor_vehicle==="permissive" || tags.motorcar==="permissive") {
           return { color: motorcarcol, dashArray:permissivedash } ;  
-      } else if ( tags.motorcycle=="permissive") {
+      } else if ( tags.motorcycle==="permissive") {
           return { color: motorcyclecol, dashArray:permissivedash } ; 
-      } else if ( tags.bicycle=="permissive" ) {
+      } else if ( tags.bicycle==="permissive" ) {
           return { color: bicyclecol, dashArray:permissivedash } ;
-      } else if ( tags.foot=="permissive" ) {
+      } else if ( tags.foot==="permissive" ) {
           return { color: footcol, dashArray:permissivedash } ;          
-      } else if ( tags.designation && tags.access=='permissive' ) {
+      } else if ( tags.designation && tags.access==='permissive' ) {
           return { color: othercol, dashArray:permissivedash } ;
       } else if ( tags.designation ) {
           return { color: othercol } ;
