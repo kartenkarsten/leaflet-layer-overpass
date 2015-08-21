@@ -96,6 +96,9 @@ options: {
 - Leaflet (tried with version 0.6.2, 0.7.3)
 
 ## Development
+
+*Warning: This fork use Git Flow to manage branches.*
+
 In order to contribute to the project you should first clone the repository. The javascript source files
 reside in the `src` folder and are concatenated and minified by gulp. If you want to make changes
 make them in the `src` folder and then build the `dist` file with gulp.

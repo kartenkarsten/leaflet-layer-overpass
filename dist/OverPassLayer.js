@@ -154,7 +154,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
 				var pos, popup, circle,
 				e = data.elements[i];
 
-				if (e.id in this.instance._ids) return;
+				if (e.id in this.instance._ids) continue;
 
 				this.instance._ids[e.id] = true;
 
