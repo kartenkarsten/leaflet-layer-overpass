@@ -107,7 +107,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
       for(var i = 0; i < data.elements.length; i++) {
         var e = data.elements[i];
 
-        if (e.id in this.instance._ids) return;
+        if (e.id in this.instance._ids) continue;
         this.instance._ids[e.id] = true;
         var pos;
         if (e.type === "node") {
