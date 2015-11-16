@@ -8,7 +8,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
   options: {
     debug: false,
     minzoom: 15,
-    endpoint: "http://overpass-api.de/api/",
+    endpoint: "//overpass-api.de/api/",
     query: "(node(BBOX)[organic];node(BBOX)[second_hand];);out qt;",
     callback: function(data) {
       for(var i = 0; i < data.elements.length; i++) {
@@ -59,7 +59,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
   _poiInfo: function(tags,id) {
     var link = document.createElement("a");
-    link.href = "http://www.openstreetmap.org/edit?editor=id&node=" + id;
+    link.href = "//www.openstreetmap.org/edit?editor=id&node=" + id;
     link.appendChild(document.createTextNode("Edit this entry in iD"));
     var table = document.createElement('table');
     for (var key in tags){
