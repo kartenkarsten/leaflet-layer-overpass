@@ -34,6 +34,15 @@ map.addLayer(opl);
 ```
 In order to get a valid query the [Overpass-turbo IDE](http://overpass-turbo.eu/) might help.
 
+Please note that you need also request all nodes of if you want to display the way. You can do this by using the recurse down statement. 
+```(
+  way(BBOX)
+    ['highway'='service'];
+  >;
+);
+out;
+```
+
 ## What are the options?
 You can specify an options object as an argument of L.OverPassLayer.
 ```javascript
@@ -73,7 +82,9 @@ options: {
 - [briefkastenkarte.de](http://briefkastenkarte.de/)
 
 ## Dependencies
+- osmtogeojson
 - Leaflet (tried with version 0.6.2, 0.7.3)
+- jQuery (trued with version 1.10.)
 
 ## Development
 In order to contribute to the project you should first clone the repository. The javascript source files
