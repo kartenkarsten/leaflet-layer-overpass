@@ -28,28 +28,29 @@
       attr_overpass = 'POI via <a href="http://www.overpass-api.de/">Overpass API</a>';
     var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {opacity: 0.7, attribution: [attr_osm, attr_overpass].join(', ')});
 
-		var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 14);
+		var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 16);
 
     //OverPassAPI overlay
     var opl = new L.OverPassLayer({
       endpoint: "http://overpass.osm.rambler.ru/cgi/",
-      query: "node(BBOX)['amenity'='post_box'];out;",
+      query: "(way(BBOX)['highway'='service'];>;);out;",
       callback: function(data) {
         for(var i=0;i<data.features.length;i++) {
           var e = data.features[i];
 
+          if (e.properties.type != "way") continue;
           if (e.properties.id in this.instance._ids) return;
           this.instance._ids[e.properties.id] = true;
-          var pos = L.GeoJSON.coordsToLatLng(e.geometry.coordinates);
+          var line = L.GeoJSON.coordsToLatLngs(e.geometry.coordinates);
           var popup = this.instance._poiInfo(e.properties.tags,e.properties.id);
           var color = e.properties.tags.collection_times ? 'green':'red';
-          var circle = L.circle(pos, 50, {
+          var polyLine = L.polyline(line, {
             color: color,
             fillColor: '#fa3',
             fillOpacity: 0.5
           })
           .bindPopup(popup);
-          this.instance.addLayer(circle);
+          this.instance.addLayer(polyLine);
         }
       },
       minZoomIndicatorOptions: {
