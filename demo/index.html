@@ -38,7 +38,7 @@
         for(var i=0;i<data.features.length;i++) {
           var e = data.features[i];
 
-          if (e.properties.id in this.instance._ids) return;
+          if (e.properties.id in this.instance._ids) continue;
           this.instance._ids[e.properties.id] = true;
           var pos = L.GeoJSON.coordsToLatLng(e.geometry.coordinates);
           var popup = this.instance._poiInfo(e.properties.tags,e.properties.id);

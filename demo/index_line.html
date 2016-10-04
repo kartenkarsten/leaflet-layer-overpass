@@ -39,7 +39,7 @@
           var e = data.features[i];
 
           if (e.properties.type != "way") continue;
-          if (e.properties.id in this.instance._ids) return;
+          if (e.properties.id in this.instance._ids) continue;
           this.instance._ids[e.properties.id] = true;
           var line = L.GeoJSON.coordsToLatLngs(e.geometry.coordinates);
           var popup = this.instance._poiInfo(e.properties.tags,e.properties.id);

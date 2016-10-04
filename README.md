@@ -54,7 +54,7 @@ options: {
     for(var i=0;i<data.elements.length;i++) {
       var e = data.elements[i];
 
-      if (e.id in this.instance._ids) return;
+      if (e.id in this.instance._ids) continue;
       this.instance._ids[e.id] = true;
       var pos = new L.LatLng(e.lat, e.lon);
       var popup = this.instance._poiInfo(e.tags,e.id);
