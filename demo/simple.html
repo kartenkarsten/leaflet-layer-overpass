@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OverPass Layer Demo</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css" />
+  <link rel="stylesheet" href="../dist/OverPassLayer.css" />
+  <script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet-src.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script src="https://tyrasd.github.io/osmtogeojson/osmtogeojson.js"></script>
+  <script src="../dist/OverPassLayer.js"></script>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    html, body, #map {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+	var attr_osm = 'Map data &copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors',
+	attr_overpass = 'POI via <a href="http://www.overpass-api.de/">Overpass API</a>';
+	var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {opacity: 0.7, attribution: [attr_osm, attr_overpass].join(', ')});
+
+	var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 14);
+
+	//OverPassAPI overlay
+	var opl = new L.OverPassLayer({
+	  query: "node(BBOX)['amenity'='post_box'];out;",
+	  endpoint: "https://overpass-api.de/api/",
+	});
+
+	map.addLayer(opl);
+  </script>
+</body>
+</html>
+

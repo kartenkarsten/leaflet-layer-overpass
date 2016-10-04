@@ -11,18 +11,18 @@ L.OverPassLayer = L.FeatureGroup.extend({
     endpoint: "//overpass-api.de/api/",
     query: "(node(BBOX)[organic];node(BBOX)[second_hand];);out qt;",
     callback: function(data) {
-      for(var i = 0; i < data.elements.length; i++) {
-        var e = data.elements[i];
+      for(var i = 0; i < data.features.length; i++) {
+        var e = data.features[i];
 
-        if (e.id in this.instance._ids) continue;
+        if (e.properties.id in this.instance._ids) continue;
         this.instance._ids[e.id] = true;
         var pos;
-        if (e.type === "node") {
-          pos = new L.LatLng(e.lat, e.lon);
-        } else {
-          pos = new L.LatLng(e.center.lat, e.center.lon);
+        if (e.properties.type === "node") {
+          pos = new L.GeoJSON.coordsToLatLng(e.geometry.coordinates);
+        } else if(e.properties.type === "way") {
+          pos = new L.GeoJSON.coordsToLatLng(e.geometry.coordinates[0][0]);
         }
-        var popup = this.instance._poiInfo(e.tags,e.id);
+        var popup = this.instance._poiInfo(e.properties.tags,e.properties.id);
         var circle = L.circle(pos, 50, {
           color: 'green',
           fillColor: '#3f0',
@@ -158,7 +158,7 @@ L.OverPassLayer = L.FeatureGroup.extend({
 
 
           var queryWithMapCoordinates = this.options.query.replace(/(BBOX)/g, bbox.toOverpassBBoxString());
-          var url =  this.options.endpoint + "interpreter?data=[out:json];" + queryWithMapCoordinates;
+          var url =  this.options.endpoint + "interpreter?data=[out:xml];" + queryWithMapCoordinates;
 
           if (beforeRequest) {
               this.options.beforeRequest.call(this);
@@ -172,7 +172,8 @@ L.OverPassLayer = L.FeatureGroup.extend({
           request.onload = function() {
             if (this.status >= 200 && this.status < 400) {
               var reference = {instance: self};
-              self.options.callback.call(reference, JSON.parse(this.response));
+              var resp = osmtogeojson($.parseXML(this.response));
+              self.options.callback.call(reference, resp);
               if (self.options.debug) {
                 console.debug('queryCount: ' + queryCount + ' - finishedCount: ' + finishedCount);
               }

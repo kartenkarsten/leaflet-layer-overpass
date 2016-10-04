@@ -34,6 +34,15 @@ map.addLayer(opl);
 ```
 In order to get a valid query the [Overpass-turbo IDE](http://overpass-turbo.eu/) might help.
 
+Please note that you need also request all nodes of if you want to display the way. You can do this by using the recurse down statement. 
+```(
+  way(BBOX)
+    ['highway'='service'];
+  >;
+);
+out;
+```
+
 ## What are the options?
 You can specify an options object as an argument of L.OverPassLayer.
 ```javascript
@@ -45,7 +54,7 @@ options: {
     for(var i=0;i<data.elements.length;i++) {
       var e = data.elements[i];
 
-      if (e.id in this.instance._ids) return;
+      if (e.id in this.instance._ids) continue;
       this.instance._ids[e.id] = true;
       var pos = new L.LatLng(e.lat, e.lon);
       var popup = this.instance._poiInfo(e.tags,e.id);
@@ -73,7 +82,9 @@ options: {
 - [briefkastenkarte.de](http://briefkastenkarte.de/)
 
 ## Dependencies
+- osmtogeojson
 - Leaflet (tried with version 0.6.2, 0.7.3)
+- jQuery (trued with version 1.10.)
 
 ## Development
 In order to contribute to the project you should first clone the repository. The javascript source files
@@ -95,7 +106,6 @@ after you made your changes. This will combine (and minify) the files and put th
 
 
 ## Further Ideas
-- OverPass result to -> geoJSON to -> Leaflet Layer to support ways and areas as well (see also [PoiMap](https://github.com/simon04/POImap/blob/master/railway.html), [OverPassTurbo](https://github.com/tyrasd/overpass-ide/blob/gh-pages/js/overpass.js))
 - improve popup text. use links, format addresses and contact details (compare with [OpenLinkMap](http://www.openlinkmap.org/))
 - improve caching - allow to store data for some days in browser
 
