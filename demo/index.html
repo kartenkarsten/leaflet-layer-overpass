@@ -4,9 +4,9 @@
   <title>OverPass Layer Demo</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1/dist/leaflet.min.css">
   <link rel="stylesheet" href="../dist/OverPassLayer.css" />
-  <script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet-src.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1/dist/leaflet-src.min.js"></script>
   <script src="../dist/OverPassLayer.js"></script>
   <style>
     body {
@@ -22,41 +22,41 @@
 <body>
   <div id="map"></div>
   <script>
-	  var attr_osm = 'Map data &copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors',
-      attr_overpass = 'POI via <a href="http://www.overpass-api.de/">Overpass API</a>';
-    var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {opacity: 0.7, attribution: [attr_osm, attr_overpass].join(', ')});
+     var attr_osm = 'Map data &copy; <a href="https://openstreetmap.org/">OpenStreetMap</a> contributors',
+     attr_overpass = 'POI via <a href="https://www.overpass-api.de/">Overpass API</a>';
+     var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {opacity: 0.7, attribution: [attr_osm, attr_overpass].join(', ')});
 
-		var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 14);
+     var map = new L.Map('map').addLayer(osm).setView(new L.LatLng(52.265, 10.524), 14);
 
-    //OverPassAPI overlay
-    var opl = new L.OverPassLayer({
-      endpoint: "http://overpass.osm.rambler.ru/cgi/",
-      query: "node(BBOX)['amenity'='post_box'];out;",
-      callback: function(data) {
-        for(var i=0;i<data.elements.length;i++) {
-          var e = data.elements[i];
+     //OverPassAPI overlay
+     var opl = new L.OverPassLayer({
+       endPoint: 'https://overpass-api.de/api/',
+       query: "node(BBOX)['amenity'='post_box'];out;",
+       callback: function(data) {
+         for (var i=0;i<data.elements.length;i++) {
+           var e = data.elements[i];
 
-          if (e.id in this.instance._ids) return;
-          this.instance._ids[e.id] = true;
-          var pos = new L.LatLng(e.lat, e.lon);
-          var popup = this.instance._poiInfo(e.tags,e.id);
-          var color = e.tags.collection_times ? 'green':'red';
-          var circle = L.circle(pos, 50, {
-            color: color,
-            fillColor: '#fa3',
-            fillOpacity: 0.5
-          })
-          .bindPopup(popup);
-          this.instance.addLayer(circle);
-        }
-      },
-      minZoomIndicatorOptions: {
-        position: 'topright',
-        minZoomMessageNoLayer: "no layer assigned",
-        minZoomMessage: "current Zoom-Level: CURRENTZOOM all data at Level: MINZOOMLEVEL"
-      }
-    });
-    map.addLayer(opl);
+           if (e.id in this.instance._ids) return;
+           this.instance._ids[e.id] = true;
+           var pos = new L.LatLng(e.lat, e.lon);
+           var popup = this.instance._poiInfo(e.tags,e.id);
+           var color = e.tags.collection_times ? 'green' : 'red';
+           var circle = L.circle(pos, 50, {
+             color: color,
+             fillColor: '#fa3',
+             fillOpacity: 0.5
+           })
+           .bindPopup(popup);
+           this.instance.addLayer(circle);
+         }
+       },
+       minZoomIndicatorOptions: {
+         position: 'topright',
+         minZoomMessageNoLayer: "no layer assigned",
+         minZoomMessage: "current zoom level: CURRENTZOOM, all data at level: MINZOOMLEVEL"
+       }
+     });
+     map.addLayer(opl);
 
   </script>
 </body>
